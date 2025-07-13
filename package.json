@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/TipDevs/tip.do/issues"
   },
-  "homepage": "https://github.com/TipDevs/tip.do#readme"
+  "homepage": "https://github.com/TipDevs/tip.do#readme",
+  "dependencies": {
+    "webpack": "^5.100.1"
+  }
 }
