@@ -6,56 +6,35 @@
     <script src="https://kit.fontawesome.com/40c93fcbb9.js" crossorigin="anonymous"></script>
     <title>tip.do</title>
 </head>
-<body class="desktop_body_aside">
+<body class="no_aside">
     <aside>
-        <!-- Desktop aside mode -->
-        <div class="desktop_aside">
-            <div class="hamburger_nav">
-                <h2>Welcome <span>Habeeb</span>  <i class="fa-regular fa-pen-to-square fa-sm edit_btn"></i></h2>
-                <div class="desktop button_background hide"><i class="fa-solid fa-burger fa-rotate-90 fa-lg hide_desktop_aside"></i></div>
-            </div>
-            <div class="sort_todo_by_date">
-                <button><i class="fa-solid fa-clock"></i> Today</button>
-                <button><i class="fa-solid fa-calendar-days"></i> Upcoming</button>
-            </div>
-            <div class="priorities">
-                <h2>Priorities</h2>
-                <button><i class="fa-solid fa-bolt"></i> High priority</button>
-                <button><i class="fa-solid fa-key"></i> Normal priority</button>
-                <button><i class="fa-solid fa-battery-quarter"></i> Low priority</button>
-            </div>
-            <button class="Add_new_project">Add New Project <i class="fa-solid fa-plus"></i></button>
-            <div class="project">
-                <h2>Projects</h2>
-            </div>
+        <div class="hamburger_nav">
+            <p>Welcome <span>Habeeb</span>  <i class="fa-regular fa-pen-to-square fa-sm edit_btn"></i></p>
+            <div class="button_background hide"><i class="fa-solid fa-outdent hide_aside"></i></div>
         </div>
-        <div class="desktop button_background show"><i class="fa-solid fa-burger fa-rotate-90 fa-lg show_desktop_aside"></i>
+        <div class="sort_todo_by_date">
+            <button><i class="fa-solid fa-clock"></i> Today</button>
+            <button><i class="fa-solid fa-calendar-days"></i> Upcoming</button>
         </div>
-
-        <!-- Mobile aside mode -->
-        <div class="mobile_aside">
-            <h2>Welcome <span>Habeeb</span>  <i class="fa-regular fa-pen-to-square fa-lg edit_btn"></i></h2>
-            <div class="hamburger_nav">
-                <div class="mobile button_background hide"><i class="fa-solid fa-burger fa-rotate-90 fa-lg hide_mobile_aside"></i></div>
-            </div>
-            <div class="sort_todo_by_date">
-                <button><i class="fa-solid fa-clock"></i> Today</button>
-                <button><i class="fa-solid fa-calendar-days"></i> Upcoming</button>
-            </div>
-            <div class="priorities">
-                <h2>Priorities</h2>
-                <button><i class="fa-solid fa-bolt"></i> High priority</button>
-                <button><i class="fa-solid fa-key"></i> Normal priority</button>
-                <button><i class="fa-solid fa-battery-quarter"></i> Low priority</button>
-            </div>
-            <button class="Add_new_project">Add New Project <i class="fa-solid fa-plus"></i></button>
-            <div class="project">
-                <h2>Projects</h2>
-            </div>
+        <div class="priorities">
+            <h2>Priorities</h2>
+            <button><i class="fa-solid fa-bolt"></i> High priority</button>
+            <button><i class="fa-solid fa-scale-balanced"></i></i> Normal priority</button>
+            <button><i class="fa-solid fa-battery-quarter"></i> Low priority</button>
         </div>
+        <button class="Add_new_project">Add New Project <i class="fa-solid fa-plus"></i></button>
+        <div class="project">
+            <h2>Projects</h2>
+            <div class="project_list"></div>
+        </div>
+    </div>
     </aside>
-    <div class="mobile button_background show"><i class="fa-solid fa-burger fa-rotate-90 fa-lg show_mobile_aside"></i></div>
-
-    <main></main>
+    <div class="button_background show"><i class="fa-solid fa-indent fa-xl show_aside"></i></div>
+    <!-- <i class="fa-regular fa-moon"></i> for changing mode -->
+    <main class="no_aside">
+        <div class="lists">
+        </div>
+        <i class="fa-solid fa-square-plus fa-2xl add_list"></i>
+    </main>
 </body>
 </html>
