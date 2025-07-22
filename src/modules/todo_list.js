@@ -1,4 +1,4 @@
-import PubSub, { publish } from "pubsub-js";
+import PubSub from "pubsub-js";
 import { todoFolderStorage } from "./todo_folder.js";
 
 // Events and Priorities factory
@@ -10,7 +10,7 @@ const setEventAndPriority = (function () {
     }
     const PRIORITIES = {
         high: "High",
-        normal: "Normal",
+        medium: "Medium",
         low: "Low",
     }
     return { EVENTS, PRIORITIES };
@@ -18,7 +18,7 @@ const setEventAndPriority = (function () {
 
 // class constructor for todo list
 class TodoList {
-    constructor(title, description, priority = setEventAndPriority.PRIORITIES.normal, dueDate) {
+    constructor(title, description, priority = setEventAndPriority.PRIORITIES.medium, dueDate) {
         this.title = title;
         this.description = description;
         this.priority = priority;
@@ -57,7 +57,7 @@ const todoListStorage = (() => {
     });
 
     // Subscribe to edit todo event
-    PubSub.subscribe(setEventAndPriority.EVENTS.EDIT_TODO, (msg, { newTitle, newDescription, newPriority = setEventAndPriority.PRIORITIES.normal, newDueDate, todoId}) => {
+    PubSub.subscribe(setEventAndPriority.EVENTS.EDIT_TODO, (msg, { newTitle, newDescription, newPriority = setEventAndPriority.PRIORITIES.medium, newDueDate, todoId}) => {
         const folders = getFolderTodoStorage();
         folders.map(folder => {
             folder.todos.map(todo => {
