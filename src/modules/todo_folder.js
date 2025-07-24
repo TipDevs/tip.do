@@ -1,9 +1,10 @@
 import PubSub from "pubsub-js";
+import { CLICK_EVENTS } from "./clickHandler";
 class TodoFolder {
     constructor(title) {
         this.title = title;
         this.todos = [];
-        this.id = Date.now();
+        this.id = crypto.randomUUID();
     }
 }
 const EVENT = {
@@ -27,11 +28,13 @@ const todoFolderStorage = (() => {
         const folders = getTodoFolder();
         folders.push(folder);
         saveTodoFolder(folders);
+        PubSub.publish(CLICK_EVENTS.update_project);
     });
     PubSub.subscribe(EVENT.DELETE_FOLDER, (msg, folderId) => {
         const folders = getTodoFolder();
         const filteredFolders = folders.filter(folder => folder.id !== folderId);
         saveTodoFolder(filteredFolders);
+        PubSub.publish(CLICK_EVENTS.update_project);
     })
     return { getTodoFolder, saveTodoFolder };
 })();
@@ -55,5 +58,5 @@ const FolderLogic = (() => {
     return { addNewFolder, deleteFolder, initDefaultFolder };
 })();
 
-// const defaultFolder = FolderLogic.initDefaultFolder();
-export { todoFolderStorage };
+const defaultFolder = FolderLogic.initDefaultFolder();
+export { todoFolderStorage, TodoFolder, FolderLogic };
