@@ -23,7 +23,7 @@ class TodoList {
         this.description = description;
         this.priority = priority;
         this.dueDate = dueDate;
-        this.id = Date.now();
+        this.id = crypto.randomUUID();
     }
 }
 
@@ -84,10 +84,4 @@ const TodoLogic = (() => {
     }
     return { addTodo, deleteTodo, editTodo };
 })();
-
-// const newTodo = new TodoList("Testing", "Checking if code works", setEventAndPriority.PRIORITIES.high, "Jul-23-2025");
-// TodoLogic.addTodo(newTodo);
-// TodoLogic.editTodo("Edit Testing", "Checking if edit works", setEventAndPriority.PRIORITIES.low, "Jul-21-2025", newTodo.id);
-// TodoLogic.deleteTodo(newTodo.id);
-
 export { todoListStorage, TodoLogic };
