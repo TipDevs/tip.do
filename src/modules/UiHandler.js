@@ -13,15 +13,15 @@ const UIsubscribers = (() => {
         const projectList = document.querySelector('.project_list');
         projectList.innerHTML = "";
         folders.forEach(folder => {
-            const projectBTN = document.createElement("button");
-            projectBTN.id = `${folder.id}`;
+            const projectDetailContainer = document.createElement("div");
+            projectDetailContainer.id = `${folder.id}`;
             if (folder.title === "Default") {
-            projectBTN.innerHTML = `${folder.title}`;   
+            projectDetailContainer.innerHTML = `<button>${folder.title}</button>`   
             }
             else {
-                projectBTN.innerHTML = `${folder.title} <i class="fa-regular fa-circle-xmark"></i>`;
+                projectDetailContainer.innerHTML = `<button>${folder.title}</button> <div id="project_delBTN_container"><i class="fa-regular fa-circle-xmark delete_project-btn" id="${folder.id}"></i></div>`;
             }
-            projectList.appendChild(projectBTN); 
+            projectList.appendChild(projectDetailContainer); 
         });
     });
 
@@ -45,8 +45,6 @@ const UIsubscribers = (() => {
                         </div>
                     </div>
                     `;
-                    main.appendChild(listContainer);
-                    main.insertAdjacentHTML("beforeend", `<i class="fa-solid fa-square-plus fa-2xl add_list ${todo.id}"></i>`);
                 });
             }
 
@@ -59,20 +57,22 @@ const UIsubscribers = (() => {
                 listContainer.classList.add("empty");
                 listContainer.appendChild(displayImage);
                 listContainer.appendChild(displayMessage);
-            }
-        });
+        }
+        main.appendChild(listContainer);
+        main.insertAdjacentHTML("beforeend", `<i class="fa-solid fa-square-plus fa-2xl add_list ${folder.id}"></i>`);
+    });
 })();
 
 // Logic that publishes events
 const UiHandlerLogic = () => {
-    const folders = todoFolderStorage.getTodoFolder();
+    const folders = todoFolderStorage().getTodoFolder();
     const addProject = () => {
         PubSub.publish(EVENTS.folderList, folders);
     }
-    const showTodoListPerProjectClick = (folder) => {
+    const showToDos = (folder) => {
         PubSub.publish(EVENTS.folderTodoList, folder);
     };
-    return { addProject, showTodoListPerProjectClick };
+    return { addProject, showToDos };
 };
 // UiHandlerLogic.addProject();
 export { UiHandlerLogic };
