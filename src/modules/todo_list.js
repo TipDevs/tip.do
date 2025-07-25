@@ -74,7 +74,7 @@ const todoListStorage = (() => {
     return { getFolderTodoStorage };
 })();
 
-const TodoLogic = (() => {
+const TodoLogic = () => {
     const addTodo = (newTodo) => {
         PubSub.publish(setEventAndPriority.EVENTS.SAVE_TODO, { todo: newTodo});
     };
@@ -83,5 +83,5 @@ const TodoLogic = (() => {
         PubSub.publish(setEventAndPriority.EVENTS.EDIT_TODO, { newTitle, newDescription, newPriority, newDueDate, todoId});
     }
     return { addTodo, deleteTodo, editTodo };
-})();
+};
 export { todoListStorage, TodoLogic };
