@@ -1,0 +1,315 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    display: grid;
+    position: relative;
+    /* height: 100dvh; */
+}
+body.with_aside {
+    grid-template: 1fr/1.7fr 4fr;
+    gap: 30px;
+    padding: 0 30px;
+}
+
+body.no_aside {
+    grid-template: 1fr/0.2fr 4fr;
+    gap: 20px;
+    padding: 15px 0 0 20px;
+}
+
+aside {
+    width: 300px;
+    background-color: #7b61ff0c;
+    grid-column: 1/span 2;
+    grid-row: 1/5;
+    justify-items: center;
+    box-shadow: 0 0 10px #7b61ff6f;
+    z-index: 5;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    height: 100%;
+    display: flex;
+    /* display: none; */
+}
+
+.fa-lg,
+.edit_btn {
+    color: #000000;
+}
+
+.hamburger_nav {
+    width: 100%;
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+    align-items: center;
+    /* padding: 10px; */
+    flex: 0.5;
+}
+/* .hamburger_nav .fa-lg:hover {
+        background-color: #2e2e2e68;
+        padding: 3px 10px;
+        border-radius: 4px;
+    } */
+.button_background {
+    background-color: #7b61ff;
+    padding: 6px 0;
+    width: 40px;
+    border-radius: 4px;
+    text-align: center;
+    cursor: pointer;
+}
+.button_background.hide {
+    background: none;
+    &:hover {
+        background-color: #2e2e2e68;
+    }
+}
+.button_background.show {
+    display: none;
+    /* display: block; */
+    width: 60px;
+    grid-column: 1/2;
+    grid-row: 1/1;
+    height: 40px;
+    place-content: center;
+    position: sticky;
+    top: 5%;
+    z-index: 999;
+}
+
+
+aside h2 {
+    font-size: 0.9rem;
+}
+
+aside p {
+    font-size: 0.97rem;
+}
+aside p span {
+    color: #7B61FF;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+.priorities {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 3;
+    button {
+        text-align: left;
+        height: 3rem;
+        padding-left: 10px;
+    }
+}
+.sort_todo_by_date {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 2.5;
+    margin-top: 20px;
+    button {
+        text-align: left;
+        height: 2rem;
+        background: none;
+        border: none;
+        outline: none;
+        padding-left: 10px;
+        border-radius: 4px;
+        font-size: 1.2rem;
+        &:hover {
+            background-color: #2e2e2e68;
+        }
+    }
+    
+}
+.Add_new_project {
+    text-align: left;
+    padding-left: 10px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    border: none;
+    background: none;
+}
+#pop_up_form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.project_list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.project {
+    flex: 5;
+    display: flex;
+    gap: 20px;
+    flex-direction: column;
+}
+
+.project>.project_list>div {
+    height: 2em;
+    width: 100%;
+    display: flex;
+    padding-left: 10px;
+    padding-right: 10px;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #7d63ff2b;
+    border-left: 5px solid #7B61FF;
+    border-radius: 5px;
+    gap: 10px;
+    &:hover {
+        background-color: #8080804b;
+    }
+}
+
+.project>.project_list>div>button {
+    background: none;
+    outline: none;
+    border: none;
+    flex: 2.5;
+    text-align: left;
+}
+.project>.project_list>div>#project_delBTN_container>.delete_project-btn{
+    cursor: pointer;
+}
+main {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100dvh;
+    align-items: center;
+    padding: 20px 0;
+    z-index: 1;
+}
+main.with_aside {
+    /* background-color: #7B61FF; */
+    grid-column: 2/-1;
+    grid-row: 1/5;
+}
+main.no_aside {
+
+}
+.lists {
+    flex: 5;
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    position: relative;
+    z-index: 1;
+}
+
+.lists.empty {
+    justify-content: center;
+    height: 90dvh;
+}
+
+.lists.empty > img {
+    width: 250px;
+    height: auto;
+    position: fixed;
+    bottom: 35%;
+}
+.lists.lists.empty > p {
+    position: fixed;
+    bottom: 45%;
+    font-size: 1.5rem;
+    font-style: italic;
+    /* font-weight: bold; */
+}
+
+.lists > .lists_items {
+    display: flex;
+    gap: 20px;
+}
+
+.lists_items > input[type="checkbox"] {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+}
+
+.lists > div {
+    background-color: #7b61ff38;
+    height: fit-content;
+    padding: 20px 0;
+    padding-left: 20px;
+    border-left: 5px solid #7B61FF;
+    border-radius: 10px;
+    position: relative;
+    z-index: 1;
+}
+
+.lists>div.with_aside {
+    width: 90%;
+}
+
+.lists>div.no_aside {
+    width: 70%;
+}
+
+.lists_items > .lists_info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+.fa-2xl.add_list {
+    color: #7B61FF;
+    cursor: pointer;
+    position: fixed;
+    top: 80%;
+    right: 15%;
+    z-index: 1000;
+}
+
+/* All buttons and icons */
+button, .edit_btn, .hide_aside {
+    cursor: pointer;
+}
+
+@media(max-width: 870px) {
+    
+}
+
+@media(max-width: 760px) {
+    body {
+        display: flex;
+        flex-direction: column;
+    }
+    body.no_aside {
+        padding: 10px 0 20px 20px;
+    }
+    body.with_aside {
+        padding: 0;
+    }
+    aside {
+        width: 100%;
+        /* display: flex; */
+        display: none;
+        position: relative;
+        height: 100dvh;
+    }
+    main {
+        /* display: none; */
+        display: flex;
+    }
+    .button_background.show {
+        /* display: none; */
+        display: block;
+    }
+    .lists {
+        width: 100%;
+    }
+    .lists>div.no_aside {
+        width: 90%;
+    }
+}
