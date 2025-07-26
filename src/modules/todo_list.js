@@ -28,7 +28,7 @@ class TodoList {
 }
 
 // Todo storage
-const todoListStorage = (() => {
+const todoListStorage = () => {
     const getFolderTodoStorage = () => {
         return todoFolderStorage.getTodoFolder();
     }
@@ -38,41 +38,45 @@ const todoListStorage = (() => {
         // console.log(folder);
     }
 
-    // Subscribe to save todo event
-    PubSub.subscribe(setEventAndPriority.EVENTS.SAVE_TODO, (msg, { todo }) => {
-        const folders = getFolderTodoStorage();
-        folders.map(folder => {
+    return { getFolderTodoStorage, saveTodoToFolder };
+};
+
+// Subscribe to save todo event
+PubSub.subscribe(setEventAndPriority.EVENTS.SAVE_TODO, (msg, { todo }) => {
+    const foldersTray = todoListStorage();
+    const folders = foldersTray.getFolderTodoStorage();
+    folders.map(folder => {
+        saveTodoToFolder(todo, folder);
+        // console.log(folder.todos)
+    });
+});
+
+// Subscribe to delete todo event
+PubSub.subscribe(setEventAndPriority.EVENTS.DELETE_TODO, (msg, { todoId }) => {
+    const foldersTray = todoListStorage();
+    const folders = foldersTray.getFolderTodoStorage();
+    folders.map(folder => {
+        const todos = folder.todos.filter(todo => todo.id !== todoId);
+        saveTodoToFolder(todos, folder);
+    });
+});
+
+// Subscribe to edit todo event
+PubSub.subscribe(setEventAndPriority.EVENTS.EDIT_TODO, (msg, { newTitle, newDescription, newPriority = setEventAndPriority.PRIORITIES.medium, newDueDate, todoId}) => {
+    const foldersTray = todoListStorage();
+    const folders = foldersTray.getFolderTodoStorage();
+    folders.map(folder => {
+        folder.todos.map(todo => {
+            if (todoId === todo.id) {
+                todo.title = newTitle;
+                todo.description = newDescription;
+                todo.priority = newPriority;
+                todo.dueDate = newDueDate;
+            }
             saveTodoToFolder(todo, folder);
-            // console.log(folder.todos)
         });
     });
-
-    // Subscribe to delete todo event
-    PubSub.subscribe(setEventAndPriority.EVENTS.DELETE_TODO, (msg, { todoId }) => {
-        const folders = getFolderTodoStorage();
-        folders.map(folder => {
-            const todos = folder.todos.filter(todo => todo.id !== todoId);
-            saveTodoToFolder(todos, folder);
-        });
-    });
-
-    // Subscribe to edit todo event
-    PubSub.subscribe(setEventAndPriority.EVENTS.EDIT_TODO, (msg, { newTitle, newDescription, newPriority = setEventAndPriority.PRIORITIES.medium, newDueDate, todoId}) => {
-        const folders = getFolderTodoStorage();
-        folders.map(folder => {
-            folder.todos.map(todo => {
-                if (todoId === todo.id) {
-                    todo.title = newTitle;
-                    todo.description = newDescription;
-                    todo.priority = newPriority;
-                    todo.dueDate = newDueDate;
-                }
-                saveTodoToFolder(todo, folder);
-            });
-        });
-    });
-    return { getFolderTodoStorage };
-})();
+});
 
 const TodoLogic = () => {
     const addTodo = (newTodo) => {
