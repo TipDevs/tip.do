@@ -12,27 +12,42 @@ const EVENT = {
     DELETE_FOLDER: "delete to-do folder from local storage", 
 }
 const todoFolderStorage = () => {
-    const key = "Project";
-    const getTodoFolder = () => {
-        return JSON.parse(localStorage.getItem(key)) || [];
+  const key = "Project";
+
+  const getTodoFolder = () => {
+    return JSON.parse(localStorage.getItem(key)) || [];
+  };
+
+  const saveTodoFolder = (folderObj) => {
+    const folders = getTodoFolder();
+
+    // Prevent accidentally wrapping arrays
+    if (Array.isArray(folderObj)) {
+      return;
     }
-    const saveTodoFolder = (folders) => {
-    // Make sure folders is always an array
-    if (!Array.isArray(folders)) {
-        folders = [folders];
+
+    const index = folders.findIndex(f => f.id === folderObj.id);
+
+    if (index !== -1) {
+      folders[index] = folderObj;
+    } else {
+      folders.push(folderObj);
     }
-        localStorage.setItem(key, JSON.stringify(folders));
-    };
-    return { getTodoFolder, saveTodoFolder };
+
+    localStorage.setItem(key, JSON.stringify(folders));
+  };
+
+  return { getTodoFolder, saveTodoFolder };
 };
 
+
 PubSub.subscribe(EVENT.SAVE_FOLDER, (msg, folder) => {
-    const folderStorageHandler = todoFolderStorage();
-    const folders = folderStorageHandler.getTodoFolder();
-    folders.push(folder);
-    folderStorageHandler.saveTodoFolder(folders);
-    PubSub.publish(CLICK_EVENTS.update_project);
-    });
+  const folderStorageHandler = todoFolderStorage();
+  folderStorageHandler.saveTodoFolder(folder);
+
+  PubSub.publish(CLICK_EVENTS.update_project);
+});
+
 PubSub.subscribe(EVENT.DELETE_FOLDER, (msg, folderId) => {
     const folderStorageHandler = todoFolderStorage();
     const folders = folderStorageHandler.getTodoFolder();
@@ -50,12 +65,13 @@ const FolderLogic = (() => {
         console.log(folders);
         let defaultFolder = folders.find(folder => folder.title === "Default");
 
-        if (!defaultFolder) {
+        if (defaultFolder) return;
+        else {
             defaultFolder = new TodoFolder("Default");
             addNewFolder(defaultFolder);
         }
 
-        return defaultFolder;
+        // return defaultFolder;
     };
 
     return { addNewFolder, deleteFolder, initDefaultFolder };

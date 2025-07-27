@@ -15,28 +15,46 @@ const UIsubscribers = (() => {
         folders.forEach(folder => {
             const projectDetailContainer = document.createElement("div");
             projectDetailContainer.id = `${folder.id}`;
+            const btnWrapper = document.createElement("div");
+            btnWrapper.classList.add("project_wrap");
+
+            const btn = document.createElement("button");
+            btn.classList.add("projectBTN");
+            btn.setAttribute("data-id", folder.id);
+            btn.textContent = folder.title;
+
+            const delContainer = document.createElement("div");
+            delContainer.id = "project_delBTN_container";
+
+            const delIcon = document.createElement("i");
+            delIcon.classList.add("fa-regular", "fa-circle-xmark", "delete_project-btn");
+            delIcon.id = folder.id;
+
+            delContainer.appendChild(delIcon);
             if (folder.title === "Default") {
-            projectDetailContainer.innerHTML = `<button>${folder.title}</button>`   
+                btnWrapper.appendChild(btn);
+                projectDetailContainer.appendChild(btnWrapper);
             }
             else {
-                projectDetailContainer.innerHTML = `<button>${folder.title}</button> <div id="project_delBTN_container"><i class="fa-regular fa-circle-xmark delete_project-btn" id="${folder.id}"></i></div>`;
+                btnWrapper.appendChild(btn);
+                projectDetailContainer.appendChild(btnWrapper);
+                projectDetailContainer.appendChild(delContainer);
             }
-            projectList.appendChild(projectDetailContainer); 
+            projectList.appendChild(projectDetailContainer);
         });
     });
 
     // Event that display list of todos in a particular project user clicked
     PubSub.subscribe(EVENTS.folderTodoList, (msg, folder) => {
-        const main = document.querySelector('main');
-        main.innerHTML = '';
-        const listContainer = document.createElement('div');
-        listContainer.classList.add('lists');
+        const listContainer = document.querySelector('.lists');
+        listContainer.innerHTML = "";
+        listContainer.dataset.id = folder.id;
             if (folder.todos.length > 0) {
                 folder.todos.map(todo => {
-                    const listExist = document.querySelector(`#${todo.id}`);
+                    const listExist = document.querySelector(`#${todo.title}-${todo.id}`);
                     if (listExist) listExist.remove();
-                    listContainer.innerHTML = `
-                    <div class="lists_items, with_aside" id="${todo.id}">
+                    listContainer.innerHTML += `
+                    <div class="lists_items, with_aside" id="${todo.title}-${todo.id}">
                         <input type="checkbox">
                         <div class="lists_info">
                             <p id="${todo.title}">${todo.title}</p>
@@ -53,13 +71,13 @@ const UIsubscribers = (() => {
                 displayImage.src = tip_do;
                 const displayMessage = document.createElement('p');
                 displayMessage.textContent = "Nothing to do here";
-                listContainer.innerHTML = "";
                 listContainer.classList.add("empty");
                 listContainer.appendChild(displayImage);
                 listContainer.appendChild(displayMessage);
         }
-        main.appendChild(listContainer);
-        main.insertAdjacentHTML("beforeend", `<i class="fa-solid fa-square-plus fa-2xl add_list ${folder.id}"></i>`);
+        const add_list_wrapper = document.getElementById("add_list_wrapper");
+        add_list_wrapper.innerHTML += `<i class="fa-solid fa-square-plus fa-2xl add_list" id="${folder.id}"></i>`
+        // main.insertAdjacentHTML("beforeend", `<div id="add_list_wrapper"><i class="fa-solid fa-square-plus fa-2xl add_list" id="${folder.id}"></i></div>`);
     });
 })();
 
