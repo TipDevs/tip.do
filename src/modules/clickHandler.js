@@ -68,6 +68,9 @@ const addNewProjectEvent = (() => {
             }, 10);
             form.remove();
             PubSub.publish(UI_EVENTS.displayTasks, newProject);
+            if (mobileMediaQuery.matches) {
+                toggleAside.hideAsideEvent(mobileMediaQuery);
+            };
         });
     });
     deleteProjectEvent();
@@ -186,7 +189,10 @@ toggleAside.hideAside.addEventListener("click", () => {
         button.addEventListener("click", () => {
             const buttonId = button.id;
             PubSub.publish("Priority display", buttonId);
+            if (mobileMediaQuery.matches) {
+                toggleAside.hideAsideEvent(mobileMediaQuery);
+            }   
         });
     });
 })();
-export { displayTaskInProject, toggleAside };
+export { displayTaskInProject };
