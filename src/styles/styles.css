@@ -269,13 +269,27 @@ main.with_aside {
     /* position: fixed; */
     /* bottom: 35%; */
 }
-#no_task_message > p {
+
+#no_task_message > #message_wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     position: absolute;
-    bottom: 30%;
+    bottom: 20%;
+    height: fit-content;
+}
+#no_task_message > #message_wrapper >p,
+#no_task_message>#message_wrapper>span {
+    /* position: absolute;
+    bottom: 30%; */
     font-size: 1.5rem;
     font-style: italic;
     white-space: nowrap;
     /* font-weight: bold; */
+}
+
+#no_task_message>#message_wrapper>span {
+    color: #7B61FF;
 }
 
 .tasks > .tasks_items {
@@ -407,5 +421,15 @@ button, .edit_btn, .hide_aside {
     }
     .tasks.no_aside {
         width: 100%;
+    }
+    #no_task_message>#message_wrapper{
+        bottom: 27%;
+    }
+    #no_task_message>#message_wrapper>p,
+    #no_task_message>#message_wrapper>span {
+    font-size: 1rem;
+    /* max-width: 20ch; */
+    text-align: center;
+    /* white-space: unset; */
     }
 }

@@ -75,7 +75,10 @@ const UI = () => {
             taskContainer.innerHTML += `
             <div id=no_task_message>
             <img src="${tip_do}" alt="tip.do logo">
-            <p>No task in ${project.title}</p>
+            <div id="message_wrapper">
+            <p>No task in</p>
+            <span>${project.title}</span>
+            </div>
             </div>
             `
         }
@@ -110,7 +113,10 @@ const UI = () => {
             taskContainer.innerHTML += `
             <div id=no_task_message>
             <img src="${tip_do}" alt="tip.do logo">
-            <p>No task with ${priority} priority
+            <div id="message_wrapper">
+            <p>No task with</p>
+            <span>${priority} priority</span>
+            </div>
             </div>
             `;
         }
