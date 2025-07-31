@@ -1,4 +1,5 @@
 import PubSub from "pubsub-js";
+import { UI_EVENTS } from "./UiHandler";
 class Project {
     constructor(title) {
         this.title = title;
@@ -38,18 +39,22 @@ const projectStorage = (() => {
 })();
 
 
-(function subscribers() {
+(function ProjectSubscribers() {
   PubSub.subscribe(EVENT.SAVE_Project, (msg, project) => {
     projectStorage.saveProject(project);
+    PubSub.publish(UI_EVENTS.displayProjects);
   });
 
   PubSub.subscribe(EVENT.DELETE_Project, (msg, projectId) => {
     const projects = projectStorage.getProject();
     const updatedProjects = projects.filter(project => {
-      console.log(typeof project.id, typeof projectId);
+      if (project.title === "Default") {
+        PubSub.publish(UI_EVENTS.displayTasks, project);
+      }
       return project.id !== projectId
     });
     localStorage.setItem("Project", JSON.stringify(updatedProjects));
+    PubSub.publish(UI_EVENTS.displayProjects);
   });
 })();
 
@@ -58,7 +63,7 @@ const projectLogic = () => {
     PubSub.publish(EVENT.SAVE_Project, project)
   };
   const deleteProject = (projectId) => {
-    PubSub.publish(EVENT.DELETE_Project, projectId)
+    PubSub.publish(EVENT.DELETE_Project, projectId);
   };
   const initDefaultProject = () => {
     const projects = projectStorage.getProject();
