@@ -2,6 +2,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    scrollbar-width: none;
 }
 body {
     display: grid;
@@ -22,6 +23,7 @@ body.no_aside {
 
 aside {
     width: 300px;
+    position: fixed;
     background-color: #7b61ff0c;
     grid-column: 1/span 2;
     grid-row: 1/5;
@@ -33,7 +35,7 @@ aside {
     flex-direction: column;
     gap: 20px;
     height: 100%;
-    display: flex;
+    overflow: hidden;
     /* display: none; */
 }
 
@@ -107,6 +109,31 @@ aside p span {
         padding-left: 10px;
     }
 }
+.priorities>button:nth-child(2) {
+    background-color: #C3B1E1;
+    border: none;
+    &:hover {
+        background-color: #b29ed7;
+    }
+}
+.priorities>button:nth-child(3) {
+    background-color: #E0E0E0;
+    border: none;
+    &:hover {
+        background-color: #d4d4d4;
+    }
+}
+.priorities>button:nth-child(4) {
+    background-color: #F4F4F4;
+    border: none;
+    &:hover {
+        background-color: #eaeaea;
+    }
+}
+.priorities>button {
+    border-radius: 10px;
+    font-size: 1.1rem;
+}
 .sort_todo_by_date {
     display: flex;
     flex-direction: column;
@@ -141,19 +168,23 @@ aside p span {
     flex-direction: column;
     gap: 10px;
 }
-.project_list {
+.projects {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    overflow: scroll;
+    z-index: 1;
 }
-.project {
-    flex: 5;
+.project_container {
+    flex: 12;
     display: flex;
     gap: 20px;
     flex-direction: column;
+    z-index: 100;
+    overflow: auto;
 }
 
-.project>.project_list>div {
+.project_container>.projects>div {
     height: 2em;
     width: 100%;
     display: flex;
@@ -170,14 +201,18 @@ aside p span {
     }
 }
 
-.project>.project_list>div>button {
+.project_container>.projects>div>.project_wrap {
+    flex: 2.5;
+}
+.project_container>.projects>div>.project_wrap>button {
     background: none;
+    width: 100%;
+    height: 100%;
     outline: none;
     border: none;
-    flex: 2.5;
     text-align: left;
 }
-.project>.project_list>div>#project_delBTN_container>.delete_project-btn{
+.project_container>.projects>div>#project_delBTN_container>.delete_project-btn{
     cursor: pointer;
 }
 main {
@@ -188,16 +223,17 @@ main {
     align-items: center;
     padding: 20px 0;
     z-index: 1;
+    overflow: auto;
+    padding-bottom: 30px;
 }
 main.with_aside {
     /* background-color: #7B61FF; */
     grid-column: 2/-1;
     grid-row: 1/5;
 }
-main.no_aside {
-
-}
-.lists {
+/* main.no_aside {
+} */
+.tasks {
     flex: 5;
     width: 90%;
     display: flex;
@@ -208,18 +244,18 @@ main.no_aside {
     z-index: 1;
 }
 
-.lists.empty {
+.tasks.empty {
     justify-content: center;
     height: 90dvh;
 }
 
-.lists.empty > img {
+.tasks.empty > img {
     width: 250px;
     height: auto;
     position: fixed;
     bottom: 35%;
 }
-.lists.lists.empty > p {
+.tasks.tasks.empty > p {
     position: fixed;
     bottom: 45%;
     font-size: 1.5rem;
@@ -227,18 +263,18 @@ main.no_aside {
     /* font-weight: bold; */
 }
 
-.lists > .lists_items {
+.tasks > .tasks_items {
     display: flex;
     gap: 20px;
 }
 
-.lists_items > input[type="checkbox"] {
+.tasks_items > input[type="checkbox"] {
     width: 24px;
     height: 24px;
     cursor: pointer;
 }
 
-.lists > div {
+.tasks > div {
     background-color: #7b61ff38;
     height: fit-content;
     padding: 20px 0;
@@ -249,26 +285,68 @@ main.no_aside {
     z-index: 1;
 }
 
-.lists>div.with_aside {
+.tasks>div.with_aside {
     width: 90%;
 }
 
-.lists>div.no_aside {
+.tasks>div.no_aside {
     width: 70%;
 }
 
-.lists_items > .lists_info {
+.tasks_items > .tasks_info {
     display: flex;
     flex-direction: column;
     gap: 5px;
 }
-.fa-2xl.add_list {
+.fa-2xl.add_task {
     color: #7B61FF;
     cursor: pointer;
     position: fixed;
     top: 80%;
     right: 15%;
     z-index: 1000;
+}
+
+main #new_task_form_container {
+    width: 300px;
+    height: fit-content;
+    padding: 10px 0;
+    position: fixed;
+    top: 20%;
+    z-index: 2000;
+    background-color: #7b61ff7e;
+    backdrop-filter: blur(9px);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+}
+
+main #new_task_form_container #new_task_form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 0 20px;
+    gap: 10px;
+    justify-content: center;
+    input {
+        padding-left: 10px;
+        outline: none;
+        border: none;
+    }
+}
+main #new_task_form label {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    font-size: 1.3rem;
+}
+#new_task_form input,
+#new_task_form button,
+#new_task_form select {
+    height: 2em;
 }
 
 /* All buttons and icons */
@@ -284,32 +362,32 @@ button, .edit_btn, .hide_aside {
     body {
         display: flex;
         flex-direction: column;
+        /* height: 100dvh; */
     }
     body.no_aside {
         padding: 10px 0 20px 20px;
     }
     body.with_aside {
-        padding: 0;
+        padding: 0 0 20px 0;
     }
     aside {
         width: 100%;
-        /* display: flex; */
-        display: none;
-        position: relative;
         height: 100dvh;
+        position: relative;
+        /* padding-bottom: 20px; */
+        overflow: scroll;
+        display: none;
     }
     main {
-        /* display: none; */
         display: flex;
     }
     .button_background.show {
-        /* display: none; */
         display: block;
     }
-    .lists {
+    .tasks {
         width: 100%;
     }
-    .lists>div.no_aside {
+    .tasks>div.no_aside {
         width: 90%;
     }
 }
