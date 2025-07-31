@@ -1,37 +1,34 @@
 import PubSub from "pubsub-js";
-import { todoFolderStorage } from "./todo_folder.js";
-import { todoListStorage } from "./todo_list.js";
 import tip_do from "../assets/images/tip.do.webp";
-import { CLICK_EVENTS } from "./clickHandler.js";
-const EVENTS = {
-    folderTodoList: "Display todo lists in folder clicked",
-    folderList: "Display folder lists"
+const UI_EVENTS = {
+    displayTasks: "Display task in project clicked",
+    displayProjects: "Display projects",
 }
-const UIsubscribers = (() => {
-    // Event that add projects to project display list
-    PubSub.subscribe(EVENTS.folderList, (msg, folders) => {
-        const projectList = document.querySelector('.project_list');
-        projectList.innerHTML = "";
-        folders.forEach(folder => {
+const UI = () => {
+    const projects = JSON.parse(localStorage.getItem("Project")) || [];
+    const displayProjects = () => {
+        const projectBox = document.querySelector('.projects');
+        projectBox.innerHTML = "";
+        projects.forEach(project => {
             const projectDetailContainer = document.createElement("div");
-            projectDetailContainer.id = `${folder.id}`;
+            projectDetailContainer.dataset.id = `${project.id}`;
             const btnWrapper = document.createElement("div");
             btnWrapper.classList.add("project_wrap");
 
             const btn = document.createElement("button");
             btn.classList.add("projectBTN");
-            btn.setAttribute("data-id", folder.id);
-            btn.textContent = folder.title;
+            btn.setAttribute("data-id", project.id);
+            btn.textContent = project.title;
 
             const delContainer = document.createElement("div");
-            delContainer.id = "project_delBTN_container";
+            delContainer.dataset.id = "project_delBTN_container";
 
             const delIcon = document.createElement("i");
             delIcon.classList.add("fa-regular", "fa-circle-xmark", "delete_project-btn");
-            delIcon.id = folder.id;
+            delIcon.id = project.id;
 
             delContainer.appendChild(delIcon);
-            if (folder.title === "Default") {
+            if (project.title === "Default") {
                 btnWrapper.appendChild(btn);
                 projectDetailContainer.appendChild(btnWrapper);
             }
@@ -40,57 +37,64 @@ const UIsubscribers = (() => {
                 projectDetailContainer.appendChild(btnWrapper);
                 projectDetailContainer.appendChild(delContainer);
             }
-            projectList.appendChild(projectDetailContainer);
+            projectBox.appendChild(projectDetailContainer);
         });
-    });
-
-    // Event that display list of todos in a particular project user clicked
-    PubSub.subscribe(EVENTS.folderTodoList, (msg, folder) => {
-        const listContainer = document.querySelector('.lists');
-        listContainer.innerHTML = "";
-        listContainer.dataset.id = folder.id;
-            if (folder.todos.length > 0) {
-                folder.todos.map(todo => {
-                    const listExist = document.querySelector(`#${todo.title}-${todo.id}`);
-                    if (listExist) listExist.remove();
-                    listContainer.innerHTML += `
-                    <div class="lists_items, with_aside" id="${todo.title}-${todo.id}">
+    };
+    const displayTasks = (project) => {
+        const taskContainer = document.querySelector('.tasks');
+        taskContainer.innerHTML = "";
+        taskContainer.dataset.id = project.id;
+        if (project.tasks.length > 0) {
+            project.tasks.map(task => {
+                const taskExist = document.querySelector(`#${task.title}-${task.id}`);
+                if (taskExist) taskExist.remove();
+                taskContainer.innerHTML += `
+                    <div class="tasks_items, with_aside" id="${task.title}-${task.id}">
                         <input type="checkbox">
-                        <div class="lists_info">
-                            <p id="${todo.title}">${todo.title}</p>
-                            <p id="description">${todo.description}</p>
-                            <p id="due_date">${todo.dueDate}</p>
+                        <div class="tasks_info">
+                            <p id="${task.title}">${task.title}</p>
+                            <p id="description">${task.description}</p>
+                            <p id="due_date">${task.dueDate}</p>
                         </div>
                     </div>
                     `;
-                });
-            }
-
-            else {
-                const displayImage = document.createElement('img');
-                displayImage.src = tip_do;
-                const displayMessage = document.createElement('p');
-                displayMessage.textContent = "Nothing to do here";
-                listContainer.classList.add("empty");
-                listContainer.appendChild(displayImage);
-                listContainer.appendChild(displayMessage);
+            });
         }
-        const add_list_wrapper = document.getElementById("add_list_wrapper");
-        add_list_wrapper.innerHTML += `<i class="fa-solid fa-square-plus fa-2xl add_list" id="${folder.id}"></i>`
-        // main.insertAdjacentHTML("beforeend", `<div id="add_list_wrapper"><i class="fa-solid fa-square-plus fa-2xl add_list" id="${folder.id}"></i></div>`);
-    });
-})();
 
-// Logic that publishes events
-const UiHandlerLogic = () => {
-    const folders = todoFolderStorage().getTodoFolder();
-    const addProject = () => {
-        PubSub.publish(EVENTS.folderList, folders);
-    }
-    const showToDos = (folder) => {
-        PubSub.publish(EVENTS.folderTodoList, folder);
+        else {
+            const displayImage = document.createElement('img');
+            displayImage.src = tip_do;
+            const displayMessage = document.createElement('p');
+            displayMessage.textContent = "Nothing to do here";
+            taskContainer.classList.add("empty");
+            taskContainer.appendChild(displayImage);
+            taskContainer.appendChild(displayMessage);
+        }
+        const showTaskWrapper = document.getElementById("showTaskWrapper");
+        showTaskWrapper.innerHTML += `<i class="fa-solid fa-square-plus fa-2xl add_task" id="${project.id}"></i>`;
+        // main.insertAdjacentHTML("beforeend", `<div id="showTaskWrapper"><i class="fa-solid fa-square-plus fa-2xl add_task" id="${project.id}"></i></div>`);
     };
-    return { addProject, showToDos };
+    return { displayProjects, displayTasks };
 };
-// UiHandlerLogic.addProject();
-export { UiHandlerLogic };
+
+// Event that add projects to project display task
+PubSub.subscribe(UI_EVENTS.displayProjects, () => {
+    UI().displayProjects();  
+});
+
+// Event that display task of tasks in a particular project user clicked
+PubSub.subscribe(UI_EVENTS.displayTasks, (msg, project) => {
+    UI().displayTasks(project);
+});
+
+// Logic that publishes UI_EVENTS
+const UiHandlerLogic = () => {
+    const showProject = () => {
+        PubSub.publish(UI_EVENTS.displayProjects);
+    }
+    const showTasks = (project) => {
+        PubSub.publish(UI_EVENTS.displayTasks, project);
+    };
+    return { showProject, showTasks };
+};
+export { UiHandlerLogic, UI_EVENTS };
