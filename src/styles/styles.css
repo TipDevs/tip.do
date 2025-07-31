@@ -7,16 +7,19 @@
 body {
     display: grid;
     position: relative;
+    grid-auto-rows: 1fr;
+    width: 100dvw;
     /* height: 100dvh; */
 }
 body.with_aside {
-    grid-template: 1fr/1.7fr 4fr;
+    grid-template: 1fr/1.4fr 5.2fr;
     gap: 30px;
     padding: 0 30px;
 }
 
 body.no_aside {
-    grid-template: 1fr/0.2fr 4fr;
+    display: flex;
+    flex-direction: column;
     gap: 20px;
     padding: 15px 0 0 20px;
 }
@@ -221,6 +224,7 @@ main {
     flex-direction: column;
     height: 100dvh;
     align-items: center;
+    justify-content: center;
     padding: 20px 0;
     z-index: 1;
     overflow: auto;
@@ -235,7 +239,7 @@ main.with_aside {
 } */
 .tasks {
     flex: 5;
-    /* width: 90%; */
+    width: 90%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -376,7 +380,7 @@ button, .edit_btn, .hide_aside {
         /* height: 100dvh; */
     }
     body.no_aside {
-        padding: 10px 0 20px 20px;
+        padding: 10px 0 20px 0;
     }
     body.with_aside {
         padding: 0 0 20px 0;
@@ -391,14 +395,16 @@ button, .edit_btn, .hide_aside {
     }
     main {
         display: flex;
+        place-self: center;
     }
     .button_background.show {
         display: block;
+        margin-left: 10PX;
     }
     .tasks {
         width: 100%;
     }
-    .tasks>div.no_aside {
-        width: 90%;
+    .tasks.no_aside {
+        width: 100%;
     }
 }
