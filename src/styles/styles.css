@@ -235,7 +235,7 @@ main.with_aside {
 } */
 .tasks {
     flex: 5;
-    width: 90%;
+    /* width: 90%; */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -246,20 +246,31 @@ main.with_aside {
 
 .tasks.empty {
     justify-content: center;
+    align-items: center;
     height: 90dvh;
 }
-
-.tasks.empty > img {
+#no_task_message {
+    position: fixed;
+    top: 25%;
+    background: none;
+    border: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+#no_task_message > img {
     width: 250px;
     height: auto;
-    position: fixed;
-    bottom: 35%;
+    /* position: fixed; */
+    /* bottom: 35%; */
 }
-.tasks.tasks.empty > p {
-    position: fixed;
-    bottom: 45%;
+#no_task_message > p {
+    position: absolute;
+    bottom: 30%;
     font-size: 1.5rem;
     font-style: italic;
+    white-space: nowrap;
     /* font-weight: bold; */
 }
 
