@@ -1,8 +1,10 @@
 import PubSub from "pubsub-js";
 import tip_do from "../assets/images/tip.do.webp";
+import { prioritySorting } from "./prioritySorting";
 const UI_EVENTS = {
     displayTasks: "Display task in project clicked",
     displayProjects: "Display projects",
+    priorityDisplay: "Display task by priority",
 }
 const UI = () => {
     const projects = JSON.parse(localStorage.getItem("Project")) || [];
@@ -62,19 +64,59 @@ const UI = () => {
         }
 
         else {
-            const displayImage = document.createElement('img');
-            displayImage.src = tip_do;
-            const displayMessage = document.createElement('p');
-            displayMessage.textContent = "Nothing to do here";
+            // const displayImage = document.createElement('img');
+            // displayImage.src = tip_do;
+            // displayImage.alt = "tip.do logo"
+            // const displayMessage = document.createElement('p');
+            // displayMessage.textContent = `No task in ${project.title}`;
             taskContainer.classList.add("empty");
-            taskContainer.appendChild(displayImage);
-            taskContainer.appendChild(displayMessage);
+            // taskContainer.appendChild(displayImage);
+            // taskContainer.appendChild(displayMessage);
+            taskContainer.innerHTML += `
+            <div id=no_task_message>
+            <img src="${tip_do}" alt="tip.do logo">
+            <p>No task in ${project.title}</p>
+            </div>
+            `
         }
         const showTaskWrapper = document.getElementById("showTaskWrapper");
+        showTaskWrapper.style.display = "block";
         showTaskWrapper.innerHTML += `<i class="fa-solid fa-square-plus fa-2xl add_task" id="${project.id}"></i>`;
         // main.insertAdjacentHTML("beforeend", `<div id="showTaskWrapper"><i class="fa-solid fa-square-plus fa-2xl add_task" id="${project.id}"></i></div>`);
     };
-    return { displayProjects, displayTasks };
+    const prioritySortingDisplay = (priorityTask, priority) => {
+        const taskContainer = document.querySelector('.tasks');
+        const showTaskWrapper = document.querySelector("#showTaskWrapper");
+        showTaskWrapper.style.display = "none";
+        taskContainer.innerHTML = "";
+        if (priorityTask.length > 0) {
+            priorityTask.forEach(task => {
+                // const taskExist = document.querySelector(`#${task.title}-${task.id}`);
+                // if (taskExist) taskExist.remove();
+                taskContainer.innerHTML += `
+                <div class="tasks_items, with_aside" id="${task.title}-${task.id}">
+                    <input type="checkbox">
+                    <div class="tasks_info">
+                        <p id="${task.title}">${task.title}</p>
+                        <p id="description">${task.description}</p>
+                        <p id="due_date">${task.dueDate}</p>
+                    </div>
+                </div>
+                `;
+            });
+        }
+        else {
+            taskContainer.classList.add('empty');
+            taskContainer.innerHTML += `
+            <div id=no_task_message>
+            <img src="${tip_do}" alt="tip.do logo">
+            <p>No task with ${priority} priority
+            </div>
+            `;
+        }
+        
+    }
+    return { displayProjects, displayTasks, prioritySortingDisplay };
 };
 
 // Event that add projects to project display task
@@ -85,6 +127,10 @@ PubSub.subscribe(UI_EVENTS.displayProjects, () => {
 // Event that display task of tasks in a particular project user clicked
 PubSub.subscribe(UI_EVENTS.displayTasks, (msg, project) => {
     UI().displayTasks(project);
+});
+// Event that display task of all project tasks by priority
+PubSub.subscribe(UI_EVENTS.priorityDisplay, (msg, { priorityTask, priority }) => {
+    UI().prioritySortingDisplay( priorityTask, priority );
 });
 
 // Logic that publishes UI_EVENTS
@@ -97,4 +143,4 @@ const UiHandlerLogic = () => {
     };
     return { showProject, showTasks };
 };
-export { UiHandlerLogic, UI_EVENTS };
+export { UiHandlerLogic, UI_EVENTS,  };

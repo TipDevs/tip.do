@@ -178,4 +178,15 @@ toggleAside.showAside.addEventListener("click", () => {
 toggleAside.hideAside.addEventListener("click", () => {
     toggleAside.hideAsideEvent(mobileMediaQuery);
 });
+
+// priority selector event listener
+(function priorityEvent() {
+    const priorityButtons = document.querySelectorAll(".priorities > button");
+    priorityButtons.forEach(button => {
+        button.addEventListener("click", () => {
+            const buttonId = button.id;
+            PubSub.publish("Priority display", buttonId);
+        });
+    });
+})();
 export { displayTaskInProject, toggleAside };
