@@ -4,7 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack serve --open --config webpack.dev.js",
+    "build": "webpack --config webpack.prod.js",
+    "deploy": "git subtree push --prefix dist origin gh-pages",
+    "check_merge": "git checkout -b gh-pages && git merge main --no-edit",
+    "addDist": "git add dist -f && git commit -m 'Deployment commit'"
   },
   "repository": {
     "type": "git",
@@ -17,7 +22,18 @@
     "url": "https://github.com/TipDevs/tip.do/issues"
   },
   "homepage": "https://github.com/TipDevs/tip.do#readme",
+  "devDependencies": {
+    "css-loader": "^7.1.2",
+    "html-loader": "^5.1.0",
+    "html-webpack-plugin": "^5.6.3",
+    "style-loader": "^4.0.0",
+    "webpack": "^5.100.1",
+    "webpack-cli": "^6.0.1",
+    "webpack-dev-server": "^5.2.2",
+    "webpack-merge": "^6.0.1"
+  },
   "dependencies": {
-    "webpack": "^5.100.1"
+    "date-fns": "^4.1.0",
+    "pubsub-js": "^1.9.5"
   }
 }
