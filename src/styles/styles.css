@@ -396,6 +396,7 @@ button, .edit_btn, .hide_aside {
     main {
         display: flex;
         place-self: center;
+        width: 100%;
     }
     .button_background.show {
         display: block;
