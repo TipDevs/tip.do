@@ -130,9 +130,14 @@ const usernameUI = () => {
     const userInfoTray = JSON.parse(localStorage.getItem("Username")) || [];
     console.log(userInfoTray._username);
     const usernameWrapper = document.querySelector('#username');
-    if (userInfoTray._username !== "") {
+    if (Object.keys(userInfoTray).length > 0) {
+        if (userInfoTray._username !== "") {
             const capitalizedUsername = userInfoTray._username.charAt(0).toUpperCase() + userInfoTray._username.slice(1).toLowerCase();
             usernameWrapper.textContent = `${capitalizedUsername}`;
+        }
+        else {
+        usernameWrapper.textContent = `Username`;
+    }
     }
     else {
         usernameWrapper.textContent = `Username`;
