@@ -61,6 +61,10 @@ aside {
         padding: 3px 10px;
         border-radius: 4px;
     } */
+
+#username_form {
+    display: none;
+}
 .button_background {
     background-color: #7b61ff;
     padding: 6px 0;

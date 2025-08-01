@@ -5,6 +5,7 @@ const UI_EVENTS = {
     displayTasks: "Display task in project clicked",
     displayProjects: "Display projects",
     priorityDisplay: "Display task by priority",
+    updateUsername: "Edit and update username",
 }
 const UI = () => {
     const projects = JSON.parse(localStorage.getItem("Project")) || [];
@@ -125,6 +126,19 @@ const UI = () => {
     return { displayProjects, displayTasks, prioritySortingDisplay };
 };
 
+const usernameUI = () => {
+    const userInfoTray = JSON.parse(localStorage.getItem("Username")) || [];
+    console.log(userInfoTray._username);
+    const usernameWrapper = document.querySelector('#username');
+    if (userInfoTray._username !== "") {
+            const capitalizedUsername = userInfoTray._username.charAt(0).toUpperCase() + userInfoTray._username.slice(1).toLowerCase();
+            usernameWrapper.textContent = `${capitalizedUsername}`;
+    }
+    else {
+        usernameWrapper.textContent = `Username`;
+    }
+};
+
 // Event that add projects to project display task
 PubSub.subscribe(UI_EVENTS.displayProjects, () => {
     UI().displayProjects();  
@@ -139,6 +153,11 @@ PubSub.subscribe(UI_EVENTS.priorityDisplay, (msg, { priorityTask, priority }) =>
     UI().prioritySortingDisplay( priorityTask, priority );
 });
 
+// Event that make sure username get updated in real time.
+PubSub.subscribe(UI_EVENTS.updateUsername, () => {
+    usernameUI();
+})
+
 // Logic that publishes UI_EVENTS
 const UiHandlerLogic = () => {
     const showProject = () => {
@@ -149,4 +168,4 @@ const UiHandlerLogic = () => {
     };
     return { showProject, showTasks };
 };
-export { UiHandlerLogic, UI_EVENTS,  };
+export { UiHandlerLogic, UI_EVENTS, usernameUI  };

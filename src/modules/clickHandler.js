@@ -3,6 +3,7 @@ import { Project, projectLogic } from "./project";
 import { Task, taskLogic } from "./task";
 import { UiHandlerLogic, UI_EVENTS } from "./UiHandler";
 import { asideToggler } from "./toggle";
+import { newUser } from "./username";
 
 // global variables
 const toggleAside = asideToggler();
@@ -194,5 +195,26 @@ toggleAside.hideAside.addEventListener("click", () => {
             }   
         });
     });
+})();
+
+(function editUsername() {
+    const usernameMessageContainer = document.querySelector('#username_container');
+    // const editUsernameBtn = usernameMessageContainer.querySelector('.edit_btn');
+    const usernameForm = document.querySelector('#username_form');
+    usernameMessageContainer.addEventListener("click", (event) => {
+        event.target.closest(".edit_btn");
+        usernameMessageContainer.style.display = "none";
+        usernameForm.style.display = "block";
+    });
+    usernameForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const usernameFormInput = usernameForm.querySelector("input");
+        newUser.userName = `${usernameFormInput.value}`;
+        usernameMessageContainer.style.display = "block";
+        usernameForm.reset();
+        usernameForm.style.display = "none";
+        PubSub.publish("edit username", newUser);
+        PubSub.publish(UI_EVENTS.updateUsername);
+        })
 })();
 export { displayTaskInProject };
