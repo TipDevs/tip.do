@@ -1,11 +1,12 @@
 import PubSub from "pubsub-js";
 import tip_do from "../assets/images/tip.do.webp";
-import { prioritySorting } from "./prioritySorting";
 const UI_EVENTS = {
     displayTasks: "Display task in project clicked",
     displayProjects: "Display projects",
     priorityDisplay: "Display task by priority",
     updateUsername: "Edit and update username",
+    todaySorting: "Display task sort by today",
+    upcomingSorting: "Display future task",
 }
 const UI = () => {
     const projects = JSON.parse(localStorage.getItem("Project")) || [];
@@ -57,7 +58,7 @@ const UI = () => {
                         <div class="tasks_info">
                             <p id="${task.title}">${task.title}</p>
                             <p id="description">${task.description}</p>
-                            <p id="due_date">${task.dueDate}</p>
+                            <p id="due_date">${task.displayDate}</p>
                         </div>
                     </div>
                     `;
@@ -103,7 +104,7 @@ const UI = () => {
                     <div class="tasks_info">
                         <p id="${task.title}">${task.title}</p>
                         <p id="description">${task.description}</p>
-                        <p id="due_date">${task.dueDate}</p>
+                        <p id="due_date">${task.displayDate}</p>
                     </div>
                 </div>
                 `;
@@ -123,12 +124,76 @@ const UI = () => {
         }
         
     }
-    return { displayProjects, displayTasks, prioritySortingDisplay };
+    const dateSortingUi = () => {
+        const taskContainer = document.querySelector('.tasks');
+        const showTaskWrapper = document.querySelector("#showTaskWrapper");
+        showTaskWrapper.style.display = "none";
+        taskContainer.innerHTML = "";
+        const todayUi = (allTodayTask) => {
+            if (allTodayTask.length > 0) {
+                allTodayTask.forEach(task => {
+                    // const taskExist = document.querySelector(`#${task.title}-${task.id}`);
+                    // if (taskExist) taskExist.remove();
+                    taskContainer.innerHTML += `
+                <div class="tasks_items, with_aside" id="${task.title}-${task.id}">
+                    <input type="checkbox">
+                    <div class="tasks_info">
+                        <p id="${task.title}">${task.title}</p>
+                        <p id="description">${task.description}</p>
+                        <p id="due_date">${task.displayDate}</p>
+                    </div>
+                </div>
+                `;
+                });
+            }
+            else {
+                taskContainer.classList.add('empty');
+                taskContainer.innerHTML += `
+            <div id=no_task_message>
+            <img src="${tip_do}" alt="tip.do logo">
+            <div id="message_wrapper">
+            <p>No task <span>today</span> </p>
+            </div>
+            </div>
+            `;
+            }
+        };
+         const upcomingUi = (allUpcomingTask) => {
+            if (allUpcomingTask.length > 0) {
+                allUpcomingTask.forEach(task => {
+                    // const taskExist = document.querySelector(`#${task.title}-${task.id}`);
+                    // if (taskExist) taskExist.remove();
+                    taskContainer.innerHTML += `
+                <div class="tasks_items, with_aside" id="${task.title}-${task.id}">
+                    <input type="checkbox">
+                    <div class="tasks_info">
+                        <p id="${task.title}">${task.title}</p>
+                        <p id="description">${task.description}</p>
+                        <p id="due_date">${task.displayDate}</p>
+                    </div>
+                </div>
+                `;
+                });
+            }
+            else {
+                taskContainer.classList.add('empty');
+                taskContainer.innerHTML += `
+            <div id=no_task_message>
+            <img src="${tip_do}" alt="tip.do logo">
+            <div id="message_wrapper">
+            <p>No <span>upcoming</span> task</p>
+            </div>
+            </div>
+            `;
+            }
+         };
+        return { todayUi, upcomingUi };
+    };
+    return { displayProjects, displayTasks, prioritySortingDisplay, dateSortingUi };
 };
 
 const usernameUI = () => {
     const userInfoTray = JSON.parse(localStorage.getItem("Username")) || [];
-    console.log(userInfoTray._username);
     const usernameWrapper = document.querySelector('#username');
     if (Object.keys(userInfoTray).length > 0) {
         if (userInfoTray._username !== "") {
@@ -144,6 +209,7 @@ const usernameUI = () => {
     }
 };
 
+
 // Event that add projects to project display task
 PubSub.subscribe(UI_EVENTS.displayProjects, () => {
     UI().displayProjects();  
@@ -157,6 +223,13 @@ PubSub.subscribe(UI_EVENTS.displayTasks, (msg, project) => {
 PubSub.subscribe(UI_EVENTS.priorityDisplay, (msg, { priorityTask, priority }) => {
     UI().prioritySortingDisplay( priorityTask, priority );
 });
+
+PubSub.subscribe(UI_EVENTS.todaySorting, (msg, todayTasks) => {
+    UI().dateSortingUi().todayUi(todayTasks);
+})
+PubSub.subscribe(UI_EVENTS.upcomingSorting, (msg, upcomingTasks) => {
+    UI().dateSortingUi().upcomingUi(upcomingTasks)
+})
 
 // Event that make sure username get updated in real time.
 PubSub.subscribe(UI_EVENTS.updateUsername, () => {

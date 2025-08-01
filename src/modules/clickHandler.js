@@ -4,6 +4,8 @@ import { Task, taskLogic } from "./task";
 import { UiHandlerLogic, UI_EVENTS } from "./UiHandler";
 import { asideToggler } from "./toggle";
 import { newUser } from "./username";
+import "./prioritySorting";
+import "./dateSorting";
 
 // global variables
 const toggleAside = asideToggler();
@@ -196,7 +198,16 @@ toggleAside.hideAside.addEventListener("click", () => {
         });
     });
 })();
-
+(function dateSorting() {
+    const todayTaskBtn = document.querySelector("#todayTaskBtn");
+    const upcomingTaskBtn = document.querySelector("#upcomingTaskBtn");
+    todayTaskBtn.addEventListener("click", () => {
+        PubSub.publish("today sorting");
+    });
+    upcomingTaskBtn.addEventListener("click", () => {
+        PubSub.publish("upcoming task")
+    });
+})();
 (function editUsername() {
     const usernameMessageContainer = document.querySelector('#username_container');
     // const editUsernameBtn = usernameMessageContainer.querySelector('.edit_btn');

@@ -1,5 +1,6 @@
 import PubSub from "pubsub-js";
 import { UI_EVENTS } from "./UiHandler";
+import {format, parseISO} from "date-fns"
 // // import { Taskproject, projectLogic } from "./Task_project.js";
 // import { CLICK_EVENTS } from "./clickHandler.js";
 
@@ -25,6 +26,7 @@ class Task {
         this.description = description;
         this.priority = priority;
         this.dueDate = dueDate;
+        this.displayDate = format(parseISO(dueDate), "eeee, MMM do, yyyy");
         this.id = crypto.randomUUID();
     }
 }

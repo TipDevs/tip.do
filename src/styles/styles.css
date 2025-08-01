@@ -292,7 +292,8 @@ main.with_aside {
     /* font-weight: bold; */
 }
 
-#no_task_message>#message_wrapper>span {
+#no_task_message>#message_wrapper>span,
+#no_task_message>#message_wrapper>p > span {
     color: #7B61FF;
 }
 
