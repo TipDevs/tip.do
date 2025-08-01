@@ -4,7 +4,6 @@ import PubSub from "pubsub-js";
 const prioritySorting = function (priority) {
     const projectTray = JSON.parse(localStorage.getItem("Project"));
     const allPriorityTasks = projectTray.flatMap(project => project.tasks.filter(task => task.priority === priority));
-    console.log(allPriorityTasks);
     PubSub.publish(UI_EVENTS.priorityDisplay, { priorityTask: allPriorityTasks, priority: priority});
 };
 
