@@ -10,6 +10,7 @@ const setEventAndPriority = function () {
         SAVE_Task: "save to-do to project",
         DELETE_Task: "delete to-do from project",
         EDIT_Task: "edit and update to-do in project",
+        toggleCompletion: "mark task completion",
     }
     const PRIORITIES = {
         high: "High",
@@ -26,8 +27,9 @@ class Task {
         this.description = description;
         this.priority = priority;
         this.dueDate = dueDate;
-        this.displayDate = format(parseISO(dueDate), "eeee, MMM do, yyyy");
+        this.displayDate = format(parseISO(dueDate), "eeee-MMM do, yyyy");
         this.id = crypto.randomUUID();
+        this.complete = false;
     }
 }
 
@@ -83,13 +85,13 @@ const taskListStorage = () => {
         const updatedProjects = projects.map(project => {
             if (project.id === projectId) {
                 const updatedTasks = project.tasks.map(task => {
-                if (taskId === task.id) {
-                    task.title = newTitle;
-                    task.description = newDescription;
-                    task.priority = newPriority;
-                    task.dueDate = newDueDate;
-                }
-                return task;
+                    if (taskId === task.id) {
+                        task.title = newTitle;
+                        task.description = newDescription;
+                        task.priority = newPriority;
+                        task.dueDate = newDueDate;
+                    }
+                    return task;
                 });
                 project.tasks = updatedTasks
                 PubSub.publish(UI_EVENTS.displayTasks, project);
@@ -99,6 +101,25 @@ const taskListStorage = () => {
         localStorage.setItem("Project", JSON.stringify(updatedProjects));
         // PubSub.publish(CLICK_EVENTS.update_project);
     });
+    // Subscribe to complete event
+    PubSub.subscribe(setEventAndPriority().EVENTS.toggleCompletion, (msg, { taskId, projectId }) => {
+        const projectsTray = taskListStorage();
+        const projects = projectsTray.getProjectTaskStorage();
+        const updatedProjects = projects.map(project => {
+            if (project.id === projectId) {
+                const updatedTasks = project.tasks.map(task => {
+                if (taskId === task.id) {
+                    task.complete = !task.complete;
+                }
+                return task;
+                });
+                project.tasks = updatedTasks;
+                // PubSub.publish(UI_EVENTS.displayTasks, project);
+            }
+            return project;
+        });
+        localStorage.setItem("Project", JSON.stringify(updatedProjects));
+    })
 })();
 
 const taskLogic = () => {
@@ -110,6 +131,9 @@ const taskLogic = () => {
     const editTask = (newTitle, newDescription, newPriority, newDueDate, taskId, containerId) => {
         PubSub.publish(setEventAndPriority().EVENTS.EDIT_Task, { newTitle: newTitle, newDescription: newDescription, newPriority: newPriority, newDueDate: newDueDate, taskId: taskId, projectId: containerId});
     }
-    return { addTask, deleteTask, editTask };
+    const toggleCompletion = (taskId, projectId) => {
+        PubSub.publish(setEventAndPriority().EVENTS.toggleCompletion, { taskId: taskId, projectId: projectId });
+    }
+    return { addTask, deleteTask, editTask, toggleCompletion };
 };
 export { taskLogic, Task };

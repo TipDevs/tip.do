@@ -203,9 +203,15 @@ toggleAside.hideAside.addEventListener("click", () => {
     const upcomingTaskBtn = document.querySelector("#upcomingTaskBtn");
     todayTaskBtn.addEventListener("click", () => {
         PubSub.publish("today sorting");
+        if (mobileMediaQuery.matches) {
+            toggleAside.hideAsideEvent(mobileMediaQuery);
+        };
     });
     upcomingTaskBtn.addEventListener("click", () => {
-        PubSub.publish("upcoming task")
+        PubSub.publish("upcoming task");
+        if (mobileMediaQuery.matches) {
+            toggleAside.hideAsideEvent(mobileMediaQuery);
+        }
     });
 })();
 (function editUsername() {
@@ -227,5 +233,19 @@ toggleAside.hideAside.addEventListener("click", () => {
         PubSub.publish("edit username", newUser);
         PubSub.publish(UI_EVENTS.updateUsername);
         })
+})();
+(function toggleCompletionAndDeleteTaskEvent() { 
+    const taskContainer = document.querySelector(".tasks");
+    taskContainer.addEventListener("click", (event) => {
+        const target = event.target;
+        const task = target.closest(".tasks_items");
+        if (!task) return;
+        if (target.matches(".checkBox")) {
+            const projectId = taskContainer.dataset.id || target.closest(".checkbox").dataset.id;
+            const taskId = task.dataset.id;
+            taskLogic().toggleCompletion(taskId, projectId);
+            task.classList.toggle("completed");
+        }
+    });
 })();
 export { displayTaskInProject };

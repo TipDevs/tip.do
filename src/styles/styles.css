@@ -12,7 +12,7 @@ body {
     /* height: 100dvh; */
 }
 body.with_aside {
-    grid-template: 1fr/1.4fr 5.2fr;
+    grid-template: 1fr/2.3fr 5.5fr;
     gap: 30px;
     padding: 0 30px;
 }
@@ -229,7 +229,7 @@ main {
     height: 100dvh;
     align-items: center;
     justify-content: center;
-    padding: 20px 0;
+    /* padding: 20px 0; */
     z-index: 1;
     overflow: auto;
     padding-bottom: 30px;
@@ -250,6 +250,7 @@ main.with_aside {
     gap: 20px;
     position: relative;
     z-index: 1;
+    padding-top: 40px;
 }
 
 .tasks.empty {
@@ -300,12 +301,14 @@ main.with_aside {
 .tasks > .tasks_items {
     display: flex;
     gap: 20px;
+    max-width: 700px;
+    width: 100%;
 }
 
-.tasks_items > input[type="checkbox"] {
-    width: 24px;
-    height: 24px;
-    cursor: pointer;
+.tasks_items.completed {
+    background-color: #5ea77c50;
+    opacity: 0.5;
+    border-color: #000;
 }
 
 .tasks > div {
@@ -317,6 +320,70 @@ main.with_aside {
     border-radius: 10px;
     position: relative;
     z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.tasks > div > :nth-child(1) {
+    flex: 0.2;
+    height: 20px;
+    width: 20px;
+}
+.tasks_items.completed {
+    background-color: #5ea77c50;
+    opacity: 0.5;
+    border-color: #000;
+}
+.tasks_items.completed > .tasks_info > :nth-child(1) {
+    text-decoration: line-through;
+}
+.tasks>div> :nth-child(1):checked {
+    accent-color: #000;
+}
+.tasks>div> :nth-child(2) {
+    flex: 3.4;
+}
+.tasks>div> :nth-child(2) > :nth-child(1) {
+    font-weight: bold;
+    font-size: large;
+    font-style: normal;
+    font-family: system-ui, -apple-system,
+     BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+      Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue',
+       sans-serif;
+}
+.tasks>div> :nth-child(2)> :nth-child(2) {
+    max-width: 35ch;
+}
+.tasks>div> :nth-child(3) {
+    /* justify-self: flex-end; */
+    flex: 0.5;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.tasks>div> :nth-child(3)> :nth-child(1) {
+    cursor: pointer;
+}
+
+.tasks>div> :nth-child(3) > :nth-child(2) {
+    height: 2em;
+    border: none;
+    cursor: unset;
+}
+
+.tasks>div> :nth-child(3)> :nth-child(2).High {
+    background-color: #C3B1E1;
+}
+
+.tasks>div> :nth-child(3)> :nth-child(2).Medium {
+    background-color: #E0E0E0;
+}
+
+.tasks>div> :nth-child(3)> :nth-child(2).Low {
+    background-color: #F4F4F4;
 }
 
 .tasks>div.with_aside {
@@ -389,7 +456,9 @@ button, .edit_btn, .hide_aside {
 }
 
 @media(max-width: 870px) {
-    
+    body.with_aside {
+        grid-template: 1fr/1.5fr 2.5fr;
+    }
 }
 
 @media(max-width: 760px) {

@@ -49,16 +49,21 @@ const UI = () => {
         taskContainer.innerHTML = "";
         taskContainer.dataset.id = project.id;
         if (project.tasks.length > 0) {
+            taskContainer.classList.remove("empty");
             project.tasks.map(task => {
-                const taskExist = document.querySelector(`#${task.title}-${task.id}`);
+                const taskExist = document.querySelector(`[data-id="${task.id}"]`);
                 if (taskExist) taskExist.remove();
                 taskContainer.innerHTML += `
-                    <div class="tasks_items, with_aside" id="${task.title}-${task.id}">
-                        <input type="checkbox">
+                    <div class="tasks_items with_aside ${task.complete === true? "completed":""}" data-id="${task.id}">
+                        <input type="checkbox" class="checkBox" ${task.complete === true? "checked":""}>
                         <div class="tasks_info">
                             <p id="${task.title}">${task.title}</p>
                             <p id="description">${task.description}</p>
                             <p id="due_date">${task.displayDate}</p>
+                        </div>
+                        <div>
+                        <i class="fa-regular fa-circle-xmark fa-xl"></i>
+                        <button class="${task.priority}">${task.priority}</button>
                         </div>
                     </div>
                     `;
@@ -95,19 +100,24 @@ const UI = () => {
         showTaskWrapper.style.display = "none";
         taskContainer.innerHTML = "";
         if (priorityTask.length > 0) {
+            taskContainer.classList.remove("empty");
             priorityTask.forEach(task => {
-                // const taskExist = document.querySelector(`#${task.title}-${task.id}`);
+                // const taskExist = document.querySelector(`[data-id="${task.id}"]`);
                 // if (taskExist) taskExist.remove();
                 taskContainer.innerHTML += `
-                <div class="tasks_items, with_aside" id="${task.title}-${task.id}">
-                    <input type="checkbox">
-                    <div class="tasks_info">
-                        <p id="${task.title}">${task.title}</p>
-                        <p id="description">${task.description}</p>
-                        <p id="due_date">${task.displayDate}</p>
+                <div class="tasks_items with_aside ${task.complete === true? "completed":""}" data-id="${task.id}">
+                        <input type="checkbox" class="checkBox" ${task.complete === true? "checked":""} data-id="${task.projectId}">
+                        <div class="tasks_info">
+                            <p id="${task.title}">${task.title}</p>
+                            <p id="description">${task.description}</p>
+                            <p id="due_date">${task.displayDate}</p>
+                        </div>
+                        <div>
+                        <i class="fa-regular fa-circle-xmark fa-xl"></i>
+                        <button class="${task.priority}">${task.priority}</button>
+                        </div>
                     </div>
-                </div>
-                `;
+                    `;
             });
         }
         else {
@@ -131,19 +141,24 @@ const UI = () => {
         taskContainer.innerHTML = "";
         const todayUi = (allTodayTask) => {
             if (allTodayTask.length > 0) {
+                taskContainer.classList.remove("empty");
                 allTodayTask.forEach(task => {
-                    // const taskExist = document.querySelector(`#${task.title}-${task.id}`);
+                    // const taskExist = document.querySelector(`[data-id="${task.id}"]`);
                     // if (taskExist) taskExist.remove();
                     taskContainer.innerHTML += `
-                <div class="tasks_items, with_aside" id="${task.title}-${task.id}">
-                    <input type="checkbox">
-                    <div class="tasks_info">
-                        <p id="${task.title}">${task.title}</p>
-                        <p id="description">${task.description}</p>
-                        <p id="due_date">${task.displayDate}</p>
+                <div class="tasks_items with_aside ${task.complete === true? "completed":""}" data-id="${task.id}">
+                        <input type="checkbox" class="checkBox" ${task.complete === true? "checked":""} data-id="${task.projectId}">
+                        <div class="tasks_info">
+                            <p id="${task.title}">${task.title}</p>
+                            <p id="description">${task.description}</p>
+                            <p id="due_date">${task.displayDate}</p>
+                        </div>
+                        <div>
+                        <i class="fa-regular fa-circle-xmark fa-xl"></i>
+                        <button class="${task.priority}">${task.priority}</button>
+                        </div>
                     </div>
-                </div>
-                `;
+                    `;
                 });
             }
             else {
@@ -159,20 +174,25 @@ const UI = () => {
             }
         };
          const upcomingUi = (allUpcomingTask) => {
-            if (allUpcomingTask.length > 0) {
+             if (allUpcomingTask.length > 0) {
+                taskContainer.classList.remove("empty");
                 allUpcomingTask.forEach(task => {
-                    // const taskExist = document.querySelector(`#${task.title}-${task.id}`);
+                    // const taskExist = document.querySelector(`[data-id="${task.id}"]`);
                     // if (taskExist) taskExist.remove();
                     taskContainer.innerHTML += `
-                <div class="tasks_items, with_aside" id="${task.title}-${task.id}">
-                    <input type="checkbox">
-                    <div class="tasks_info">
-                        <p id="${task.title}">${task.title}</p>
-                        <p id="description">${task.description}</p>
-                        <p id="due_date">${task.displayDate}</p>
+                <div class="tasks_items with_aside ${task.complete === true? "completed":""}" data-id="${task.id}">
+                        <input type="checkbox" class="checkBox" ${task.complete === true? "checked":""} data-id="${task.projectId}">
+                        <div class="tasks_info">
+                            <p id="${task.title}">${task.title}</p>
+                            <p id="description">${task.description}</p>
+                            <p id="due_date">${task.displayDate}</p>
+                        </div>
+                        <div>
+                        <i class="fa-regular fa-circle-xmark fa-xl"></i>
+                        <button class="${task.priority}">${task.priority}</button>
+                        </div>
                     </div>
-                </div>
-                `;
+                    `;
                 });
             }
             else {
