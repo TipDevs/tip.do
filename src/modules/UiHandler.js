@@ -1,5 +1,6 @@
 import PubSub from "pubsub-js";
 import tip_do from "../assets/images/tip.do.webp";
+import { CLICK_EVENTS } from "./clickHandler";
 const UI_EVENTS = {
     displayTasks: "Display task in project clicked",
     displayProjects: "Display projects",
@@ -7,6 +8,8 @@ const UI_EVENTS = {
     updateUsername: "Edit and update username",
     todaySorting: "Display task sort by today",
     upcomingSorting: "Display future task",
+    addTaskForm: "Form for adding new task",
+    editTaskForm: "Form for editing existing task info",
 }
 const UI = () => {
     const projects = JSON.parse(localStorage.getItem("Project")) || [];
@@ -55,14 +58,14 @@ const UI = () => {
                 if (taskExist) taskExist.remove();
                 taskContainer.innerHTML += `
                     <div class="tasks_items with_aside ${task.complete === true? "completed":""}" data-id="${task.id}">
-                        <input type="checkbox" class="checkBox" ${task.complete === true? "checked":""}>
+                        <input type="checkbox" class="checkBox" ${task.complete === true? "checked":""} name="completion">
                         <div class="tasks_info">
-                            <p id="${task.title}">${task.title}</p>
+                            <p id="${task.title}">${task.title}  <i class="fa-regular fa-pen-to-square fa-sm editTask_btn" data-task-id="${task.id}" data-project-id="${project.id}"></i></p>
                             <p id="description">${task.description}</p>
                             <p id="due_date">${task.displayDate}</p>
                         </div>
                         <div>
-                        <i class="fa-regular fa-circle-xmark fa-xl"></i>
+                        <i class="fa-regular fa-circle-xmark fa-xl deleteTask"></i>
                         <button class="${task.priority}">${task.priority}</button>
                         </div>
                     </div>
@@ -71,14 +74,7 @@ const UI = () => {
         }
 
         else {
-            // const displayImage = document.createElement('img');
-            // displayImage.src = tip_do;
-            // displayImage.alt = "tip.do logo"
-            // const displayMessage = document.createElement('p');
-            // displayMessage.textContent = `No task in ${project.title}`;
             taskContainer.classList.add("empty");
-            // taskContainer.appendChild(displayImage);
-            // taskContainer.appendChild(displayMessage);
             taskContainer.innerHTML += `
             <div id=no_task_message>
             <img src="${tip_do}" alt="tip.do logo">
@@ -92,7 +88,6 @@ const UI = () => {
         const showTaskWrapper = document.getElementById("showTaskWrapper");
         showTaskWrapper.style.display = "block";
         showTaskWrapper.innerHTML += `<i class="fa-solid fa-square-plus fa-2xl add_task" id="${project.id}"></i>`;
-        // main.insertAdjacentHTML("beforeend", `<div id="showTaskWrapper"><i class="fa-solid fa-square-plus fa-2xl add_task" id="${project.id}"></i></div>`);
     };
     const prioritySortingDisplay = (priorityTask, priority) => {
         const taskContainer = document.querySelector('.tasks');
@@ -102,18 +97,16 @@ const UI = () => {
         if (priorityTask.length > 0) {
             taskContainer.classList.remove("empty");
             priorityTask.forEach(task => {
-                // const taskExist = document.querySelector(`[data-id="${task.id}"]`);
-                // if (taskExist) taskExist.remove();
                 taskContainer.innerHTML += `
                 <div class="tasks_items with_aside ${task.complete === true? "completed":""}" data-id="${task.id}">
                         <input type="checkbox" class="checkBox" ${task.complete === true? "checked":""} data-id="${task.projectId}">
                         <div class="tasks_info">
-                            <p id="${task.title}">${task.title}</p>
+                            <p id="${task.title}">${task.title} <i class="fa-regular fa-pen-to-square fa-sm editTask_btn"></i></p>
                             <p id="description">${task.description}</p>
                             <p id="due_date">${task.displayDate}</p>
                         </div>
                         <div>
-                        <i class="fa-regular fa-circle-xmark fa-xl"></i>
+                        <i class="fa-regular fa-circle-xmark fa-xl deleteTask"></i>
                         <button class="${task.priority}">${task.priority}</button>
                         </div>
                     </div>
@@ -143,18 +136,16 @@ const UI = () => {
             if (allTodayTask.length > 0) {
                 taskContainer.classList.remove("empty");
                 allTodayTask.forEach(task => {
-                    // const taskExist = document.querySelector(`[data-id="${task.id}"]`);
-                    // if (taskExist) taskExist.remove();
                     taskContainer.innerHTML += `
                 <div class="tasks_items with_aside ${task.complete === true? "completed":""}" data-id="${task.id}">
                         <input type="checkbox" class="checkBox" ${task.complete === true? "checked":""} data-id="${task.projectId}">
                         <div class="tasks_info">
-                            <p id="${task.title}">${task.title}</p>
+                            <p id="${task.title}">${task.title} <i class="fa-regular fa-pen-to-square fa-sm editTask_btn"></i></p>
                             <p id="description">${task.description}</p>
                             <p id="due_date">${task.displayDate}</p>
                         </div>
                         <div>
-                        <i class="fa-regular fa-circle-xmark fa-xl"></i>
+                        <i class="fa-regular fa-circle-xmark fa-xl deleteTask"></i>
                         <button class="${task.priority}">${task.priority}</button>
                         </div>
                     </div>
@@ -177,18 +168,16 @@ const UI = () => {
              if (allUpcomingTask.length > 0) {
                 taskContainer.classList.remove("empty");
                 allUpcomingTask.forEach(task => {
-                    // const taskExist = document.querySelector(`[data-id="${task.id}"]`);
-                    // if (taskExist) taskExist.remove();
                     taskContainer.innerHTML += `
                 <div class="tasks_items with_aside ${task.complete === true? "completed":""}" data-id="${task.id}">
                         <input type="checkbox" class="checkBox" ${task.complete === true? "checked":""} data-id="${task.projectId}">
                         <div class="tasks_info">
-                            <p id="${task.title}">${task.title}</p>
+                            <p id="${task.title}">${task.title} <i class="fa-regular fa-pen-to-square fa-sm editTask_btn"></i></p>
                             <p id="description">${task.description}</p>
                             <p id="due_date">${task.displayDate}</p>
                         </div>
                         <div>
-                        <i class="fa-regular fa-circle-xmark fa-xl"></i>
+                        <i class="fa-regular fa-circle-xmark fa-xl deleteTask"></i>
                         <button class="${task.priority}">${task.priority}</button>
                         </div>
                     </div>
@@ -209,7 +198,49 @@ const UI = () => {
          };
         return { todayUi, upcomingUi };
     };
-    return { displayProjects, displayTasks, prioritySortingDisplay, dateSortingUi };
+    const taskForm = () => {
+        const main = document.querySelector("main");
+        const formContainerExist = document.getElementById("new_task_form_container");
+        if (formContainerExist) formContainerExist.remove();
+        const formContainer = document.createElement("div");
+        formContainer.id = "new_task_form_container";
+        const formContainerH2 = document.createElement("h2");
+        formContainerH2.textContent = "Add New Task Form";
+        const form = document.createElement("form");
+        form.id = "new_task_form";
+        form.innerHTML = `
+                    <label for="task_title">Task Title
+                    <input type="text" id="task_title" name="task_title" required>
+                    </label>
+                    <label for="task_description">Task Description
+                    <textarea id="task_description" name="task_description" required></textarea>
+                    </label>
+                    <label for="priorities">Choose Priority
+                    <select id="priorities" name="priorities">
+                    <option value="High">High</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Low">Low</option>
+                    </select>
+                    </label>
+                    <label for="dueDate">Due Date
+                    <input type="date" id="dueDate" name="dueDate" required>
+                    </label>
+                    `
+            ;
+        const cancelContainer = document.createElement('div');
+        cancelContainer.classList.add("cancelForm");
+        cancelContainer.innerHTML = `<i class="fa-regular fa-circle-xmark fa-xl cancelForm"></i>`;
+        formContainer.appendChild(cancelContainer);
+        const task_formButton = document.createElement("button");
+        task_formButton.type = "submit";
+        task_formButton.classList.add('submit');
+        task_formButton.textContent = "Add New Task";
+        form.appendChild(task_formButton);
+        PubSub.publish(CLICK_EVENTS.taskFormEvent, formContainer);
+        formContainer.append(formContainerH2, form);
+        main.appendChild(formContainer);
+    }
+    return { displayProjects, displayTasks, prioritySortingDisplay, dateSortingUi, taskForm };
 };
 
 const usernameUI = () => {
@@ -221,8 +252,9 @@ const usernameUI = () => {
             usernameWrapper.textContent = `${capitalizedUsername}`;
         }
         else {
-        usernameWrapper.textContent = `Username`;
-    }
+            const capitalizedUsername = userInfoTray._username.charAt(0).toUpperCase() + userInfoTray._username.slice(1).toLowerCase();
+            usernameWrapper.textContent = capitalizedUsername||`Username`;
+        }
     }
     else {
         usernameWrapper.textContent = `Username`;
@@ -255,6 +287,48 @@ PubSub.subscribe(UI_EVENTS.upcomingSorting, (msg, upcomingTasks) => {
 PubSub.subscribe(UI_EVENTS.updateUsername, () => {
     usernameUI();
 })
+
+PubSub.subscribe(UI_EVENTS.addTaskForm, () => {
+    UI().taskForm();
+    const taskForm = document.querySelector('#new_task_form');
+    const addTaskBtn = taskForm.querySelector('.submit');
+    addTaskBtn.classList.add('addNew');
+    addTaskBtn.classList.remove("edit");
+    PubSub.publish(CLICK_EVENTS.taskBtnEvent);
+});
+
+PubSub.subscribe(UI_EVENTS.editTaskForm, (msg, { projectId, taskId }) => {
+    const projects = JSON.parse(localStorage.getItem("Project")) || [];
+
+    UI().taskForm();
+
+    const taskForm = document.querySelector("#new_task_form");
+    const addTaskBtn = taskForm.querySelector(".submit");
+    addTaskBtn.classList.add("edit");
+    addTaskBtn.classList.remove("addNew");
+    addTaskBtn.textContent = "Edit Task Info"
+    const project = projects.find(proj => proj.id === projectId);
+    if (!project) return;
+
+    const task = project.tasks.find(task => task.id === taskId);
+    if (!task) return;
+    // console.log(task);
+
+    const title = taskForm.querySelector("#task_title");
+    const description = taskForm.querySelector("#task_description");
+    const priority = taskForm.querySelector("#priorities");
+    const dueDate = taskForm.querySelector("#dueDate");
+    const taskFormBtn = taskForm.querySelector(".submit.edit");
+    taskFormBtn.dataset.projectId = projectId;
+    taskFormBtn.dataset.taskId = taskId;
+
+    title.value = task.title;
+    description.value = task.description;
+    priority.value = task.priority;
+    dueDate.value = task.dueDate;
+    PubSub.publish(CLICK_EVENTS.taskBtnEvent);
+});
+
 
 // Logic that publishes UI_EVENTS
 const UiHandlerLogic = () => {

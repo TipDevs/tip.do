@@ -67,7 +67,6 @@ const projectLogic = () => {
   };
   const initDefaultProject = () => {
     const projects = projectStorage.getProject();
-    console.log(projects);
     let defaultProject = projects.find(project => project.title === "Default");
     if (!defaultProject) {
       defaultProject = new Project("Default");

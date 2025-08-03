@@ -1,8 +1,6 @@
 import PubSub from "pubsub-js";
 import { UI_EVENTS } from "./UiHandler";
 import {format, parseISO} from "date-fns"
-// // import { Taskproject, projectLogic } from "./Task_project.js";
-// import { CLICK_EVENTS } from "./clickHandler.js";
 
 // Events and Priorities factory
 const setEventAndPriority = function () {
@@ -40,7 +38,6 @@ const taskListStorage = () => {
     }
     const saveTaskToProject = (newTask, project) => {
         project.tasks.push(newTask);
-        // TaskprojectStorage().saveTaskproject(project);
     }
 
     return { getProjectTaskStorage, saveTaskToProject };
@@ -124,7 +121,6 @@ const taskListStorage = () => {
 
 const taskLogic = () => {
     const addTask = (newTask, containerId) => {
-        console.log(`New Task: ${newTask}\n Container Id: ${containerId}`);
         PubSub.publish(setEventAndPriority().EVENTS.SAVE_Task, { task: newTask, projectId: containerId});
     };
     const deleteTask = (taskId, containerId) => PubSub.publish(setEventAndPriority().EVENTS.DELETE_Task, { taskId: taskId, projectId: containerId });

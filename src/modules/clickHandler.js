@@ -13,17 +13,27 @@ const mobileMediaQuery = window.matchMedia('(max-width: 760px)');
 const CLICK_EVENTS = {
     update_project: "update project list on dom",
     show_task: "show task",
+    taskFormEvent: "add event listener to task form",
+    taskBtnEvent: "task button for form render always active",
 };
 
 // pubsub subscribers for click event.
 (function clickSubscribers() {
     PubSub.subscribe(CLICK_EVENTS.update_project, () => {
         UiHandlerLogic().showProject();
+        displayTaskInProject();
+        deleteProjectEvent();
     });
     PubSub.subscribe(CLICK_EVENTS.show_task, (msg, project) => {
         UiHandlerLogic().showTasks(project);
-        addNewTaskForm();
+        PubSub.publish(CLICK_EVENTS.taskBtnEvent);
     });
+    PubSub.subscribe(CLICK_EVENTS.taskBtnEvent, () => {
+        addNewTaskForm();
+    })
+    PubSub.subscribe(CLICK_EVENTS.taskFormEvent, (msg, taskForm) => {
+        addTaskToProjectTray(taskForm);
+    })
 })();
 
 
@@ -48,35 +58,42 @@ const addNewProjectEvent = (() => {
         if (formContainerExist) formContainerExist.remove();
         const form = document.createElement('form');
         form.innerHTML = `
-        <input id="new_project_title">
-        <button id="Add_new_project">Add New Project</button>
+        <i class="fa-regular fa-circle-xmark fa-xl cancelForm"></i>
+        <input id="new_project_title" type="text">
+        <button id="Add_new_project" type="submit">Add New Project</button>
         `;
         form.id = 'pop_up_form';
         addNewProjectButton.after(form);
-        form.addEventListener("submit", (event) => {
-            event.preventDefault();
-            const new_project_title = document.querySelector('#new_project_title');
-            // const Add_new_projectBTN = document.querySelector('#Add_new_project');
-            if (new_project_title.value.trim() === '') return;
-            const newProject = new Project(new_project_title.value.trim());
-            projectLogic().addNewProject(newProject);
-            setTimeout(() => {
-                const newProjectAlert = document.createElement('div');
-                newProjectAlert.classList.add('alert');
-                newProjectAlert.textContent = "New project added";
-                addNewProjectButton.after(newProjectAlert);
+        form.addEventListener("click", (event) => {
+            const target = event.target;
+            if (target.matches("#Add_new_project")) {
+                event.preventDefault();
+                const new_project_title = document.querySelector('#new_project_title');
+                // const Add_new_projectBTN = document.querySelector('#Add_new_project');
+                if (new_project_title.value.trim() === '') return;
+                const newProject = new Project(new_project_title.value.trim());
+                projectLogic().addNewProject(newProject);
                 setTimeout(() => {
-                    newProjectAlert.remove();
-                }, 2000);
-            }, 10);
-            form.remove();
-            PubSub.publish(UI_EVENTS.displayTasks, newProject);
-            if (mobileMediaQuery.matches) {
-                toggleAside.hideAsideEvent(mobileMediaQuery);
-            };
+                    const newProjectAlert = document.createElement('div');
+                    newProjectAlert.classList.add('alert');
+                    newProjectAlert.textContent = "New project added";
+                    addNewProjectButton.after(newProjectAlert);
+                    setTimeout(() => {
+                        newProjectAlert.remove();
+                    }, 2000);
+                }, 10);
+                form.remove();
+                PubSub.publish(CLICK_EVENTS.show_task, newProject);
+                PubSub.publish(CLICK_EVENTS.update_project);
+                if (mobileMediaQuery.matches) {
+                    toggleAside.hideAsideEvent(mobileMediaQuery);
+                };    
+            }
+            if (target.matches(".cancelForm")) {
+                form.remove();
+            }
         });
     });
-    deleteProjectEvent();
 })();
 
 const displayTaskInProject = () => {
@@ -106,76 +123,61 @@ const displayTaskInProject = () => {
 };
 
 const addNewTaskForm = () => {
-    // const projectTray = JSON.parse(localStorage.getItem("Project")) || [];
-    // const projectId = projectTray.map(project => project.id);
     const main = document.querySelector("main");
-    const showTaskWrapper = document.querySelector("#showTaskWrapper");
-    showTaskWrapper.addEventListener("click", (e) => {
-        const addTaskQueryBtn = e.target.closest(".add_task");
-        const formContainerExist = document.getElementById("new_task_form_container");
-        if (formContainerExist) formContainerExist.remove();
-        const formContainer = document.createElement("div");
-        formContainer.id = "new_task_form_container";
-        const formContainerH2 = document.createElement("h2");
-        formContainerH2.textContent = "Add New Task Form";
-        const form = document.createElement("form");
-        form.id = "new_task_form";
-        form.innerHTML = `
-                    <label for="task_title">Task Title
-                    <input type="text" id="task_title" name="task_title" required>
-                    </label>
-                    <label for="task_description">Task Description
-                    <textarea id="task_description" name="task_description" required></textarea>
-                    </label>
-                    <label for="priorities">Choose Priority
-                    <select id="priorities" name="priorities">
-                    <option value="High">High</option>
-                    <option value="Medium">Medium</option>
-                    <option value="Low">Low</option>
-                    </select>
-                    </label>
-                    <label for="dueDate">Due Date
-                    <input type="date" id="dueDate" name="dueDate" required>
-                    </label>
-                    `
-            ;
-        const new_task_formButton = document.createElement("button");
-        new_task_formButton.type = "submit";
-        new_task_formButton.classList.add('submit');
-        new_task_formButton.textContent = "Add New Task";
-        form.appendChild(new_task_formButton);
-        addNewTaskToProjectTray(form);
-        formContainer.append(formContainerH2, form);
-        main.appendChild(formContainer);
+    main.addEventListener("click",  (e) => {
+        const target = e.target;
+        if (target.matches(".editTask_btn")) {
+            const projectId = target.dataset.projectId;
+            const taskId = target.dataset.taskId;
+            PubSub.publish(UI_EVENTS.editTaskForm, { projectId: projectId, taskId: taskId });
+        }
+        if (target.matches(".add_task")) {
+            PubSub.publish(UI_EVENTS.addTaskForm);
+        }
     });
 };
 
 // Event listener function attached task form to add new task to task tray of a project
-const addNewTaskToProjectTray = (taskForm) => {
+const addTaskToProjectTray = (taskForm) => {
     const taskContainer = document.querySelector('.tasks');
     const taskContainerId = taskContainer.dataset.id;
   
 
-  taskForm.addEventListener("submit", (event) => {
-      event.preventDefault(); // stop the page from reloading
-      const formContainer = document.querySelector("#new_task_form_container");
+    taskForm.addEventListener("click", (event) => {
+        const target = event.target;
+        if (target.matches(".cancelForm")) {
+            taskForm.remove();
+            PubSub.publish(CLICK_EVENTS.taskBtnEvent);
+        }
+        if (target.matches(".submit.addNew")) {
+            event.preventDefault(); // stop the page from reloading
+            // Always target fields *inside the form*
+            const task_title = taskForm.querySelector("form #task_title");
+            const task_description = taskForm.querySelector("form #task_description");
+            const priorityOptions = taskForm.querySelector("form #priorities");
+            const dueDate = taskForm.querySelector("form #dueDate");
 
-    // Always target fields *inside the form*
-    const task_title = taskForm.querySelector("#task_title");
-    const task_description = taskForm.querySelector("#task_description");
-    const priorityOptions = taskForm.querySelector("#priorities");
-    const dueDate = taskForm.querySelector("#dueDate");
-
-    const newTask = new Task(
-      task_title?.value.trim(),
-      task_description?.value.trim(),
-      priorityOptions?.value,
-      dueDate?.value
-    );
-
-    //   console.log(newTask);
-      taskLogic().addTask(newTask, taskContainerId);
-      formContainer.remove();
+            const newTask = new Task(
+            task_title?.value.trim(),
+            task_description?.value.trim(),
+            priorityOptions?.value,
+            dueDate?.value
+            );
+            taskLogic().addTask(newTask, taskContainerId);
+            taskForm.remove();
+        }
+        if (target.matches(".submit.edit")) {
+            event.preventDefault(); // stop the page from reloading
+            // Always target fields *inside the form*
+            const task_title = taskForm.querySelector("form #task_title");
+            const task_description = taskForm.querySelector("form #task_description");
+            const priorityOptions = taskForm.querySelector("form #priorities");
+            const dueDate = taskForm.querySelector("form #dueDate");
+            const projectId = target.dataset.projectId;
+            const taskId = target.dataset.taskId;
+            taskLogic().editTask(task_title.value.trim(), task_description.value.trim(), priorityOptions.value.trim(), dueDate.value.trim(), taskId, projectId);
+            taskForm.remove();
+        }
   });
 };
 toggleAside.showAside.addEventListener("click", () => {
@@ -221,7 +223,7 @@ toggleAside.hideAside.addEventListener("click", () => {
     usernameMessageContainer.addEventListener("click", (event) => {
         event.target.closest(".edit_btn");
         usernameMessageContainer.style.display = "none";
-        usernameForm.style.display = "block";
+        usernameForm.style.display = "flex";
     });
     usernameForm.addEventListener("submit", (e) => {
         e.preventDefault();
@@ -246,6 +248,12 @@ toggleAside.hideAside.addEventListener("click", () => {
             taskLogic().toggleCompletion(taskId, projectId);
             task.classList.toggle("completed");
         }
+        if (target.matches(".deleteTask")) {
+            const projectId = taskContainer.dataset.id || target.closest(".checkbox").dataset.id;
+            const taskId = task.dataset.id;
+            taskLogic().deleteTask(taskId, projectId);
+            task.remove();
+        }
     });
 })();
-export { displayTaskInProject };
+export { displayTaskInProject, CLICK_EVENTS };
