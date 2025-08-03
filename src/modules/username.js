@@ -15,7 +15,7 @@ const usernameStorage = () => {
     const saveUsername = (userInfoTray) => {
         localStorage.setItem("Username", JSON.stringify(userInfoTray));
     }
-    const storedUsername = JSON.parse(localStorage.getItem("Username"));
+    const storedUsername = JSON.parse(localStorage.getItem("Username")) || '';
     return { saveUsername, storedUsername };
 };
 
