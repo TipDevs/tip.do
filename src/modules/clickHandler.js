@@ -224,6 +224,7 @@ toggleAside.hideAside.addEventListener("click", () => {
         event.target.closest(".edit_btn");
         usernameMessageContainer.style.display = "none";
         usernameForm.style.display = "flex";
+        usernameForm.querySelector("input").type = "text";
     });
     usernameForm.addEventListener("submit", (e) => {
         e.preventDefault();
