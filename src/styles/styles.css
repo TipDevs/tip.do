@@ -4,12 +4,19 @@
     box-sizing: border-box;
     scrollbar-width: none;
 }
+/* common style for all input[type="text"] and textarea */
+input[type="text"],
+textarea, button {
+    outline: none;
+    padding-left: 5px;
+    padding-top: 3px;
+    border: none;
+}
 body {
     display: grid;
     position: relative;
     grid-auto-rows: 1fr;
     width: 100dvw;
-    /* height: 100dvh; */
 }
 body.with_aside {
     grid-template: 1fr/2.3fr 5.5fr;
@@ -39,7 +46,6 @@ aside {
     gap: 20px;
     height: 100%;
     overflow: hidden;
-    /* display: none; */
 }
 
 .fa-lg,
@@ -53,17 +59,26 @@ aside {
     gap: 20px;
     justify-content: space-between;
     align-items: center;
-    /* padding: 10px; */
     flex: 0.5;
 }
-/* .hamburger_nav .fa-lg:hover {
-        background-color: #2e2e2e68;
-        padding: 3px 10px;
-        border-radius: 4px;
-    } */
 
 #username_form {
     display: none;
+    gap: 4px;
+}
+#username_form > input[type="text"],
+ #username_form>button{
+    background: none;
+    height: 2em;
+    border-radius: 3px;
+}
+#username_form>input[type="text"] {
+    border-bottom: 3px solid #7B61FF;
+}
+#username_form>button {
+    background-color: #C3B1E1;
+    width: fit-content;
+    padding:3px;
 }
 .button_background {
     background-color: #7b61ff;
@@ -81,7 +96,6 @@ aside {
 }
 .button_background.show {
     display: none;
-    /* display: block; */
     width: 60px;
     grid-column: 1/2;
     grid-row: 1/1;
@@ -174,6 +188,30 @@ aside p span {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    background-color: #7b61ff59;
+    height: fit-content;
+    padding: 20px 5px;
+    position: relative;
+    border-radius: 9.5px;
+}
+#pop_up_form > .cancelForm {
+position: absolute;
+top: 0;
+right: 0%;
+border: none;
+cursor: pointer;
+}
+
+#pop_up_form > input,
+#pop_up_form> button {
+    width: 80%;
+    align-self: center;
+    justify-self: center;
+    border: none;
+    border-radius: 3px;
+}
+#pop_up_form>button {
+    padding: 3px 0;
 }
 .projects {
     display: flex;
@@ -229,18 +267,14 @@ main {
     height: 100dvh;
     align-items: center;
     justify-content: center;
-    /* padding: 20px 0; */
     z-index: 1;
     overflow: auto;
     padding-bottom: 30px;
 }
 main.with_aside {
-    /* background-color: #7B61FF; */
     grid-column: 2/-1;
     grid-row: 1/5;
 }
-/* main.no_aside {
-} */
 .tasks {
     flex: 5;
     width: 90%;
@@ -271,8 +305,6 @@ main.with_aside {
 #no_task_message > img {
     width: 250px;
     height: auto;
-    /* position: fixed; */
-    /* bottom: 35%; */
 }
 
 #no_task_message > #message_wrapper {
@@ -285,12 +317,9 @@ main.with_aside {
 }
 #no_task_message > #message_wrapper >p,
 #no_task_message>#message_wrapper>span {
-    /* position: absolute;
-    bottom: 30%; */
     font-size: 1.5rem;
     font-style: italic;
     white-space: nowrap;
-    /* font-weight: bold; */
 }
 
 #no_task_message>#message_wrapper>span,
@@ -432,11 +461,6 @@ main #new_task_form_container #new_task_form {
     padding: 0 20px;
     gap: 10px;
     justify-content: center;
-    input {
-        padding-left: 10px;
-        outline: none;
-        border: none;
-    }
 }
 main #new_task_form label {
     display: flex;
@@ -449,9 +473,24 @@ main #new_task_form label {
 #new_task_form select {
     height: 2em;
 }
-
+#new_task_form select {
+    padding-left: 4px;
+}
+#new_task_form textarea#task_description {
+    height: 60px;
+    /* width: 80%; */
+    resize: none;
+}
+#new_task_form_container > .cancelForm {
+    cursor: pointer;
+    position: absolute;
+    top: 3%;
+    left: 90%;
+}
 /* All buttons and icons */
-button, .edit_btn, .hide_aside {
+button, .edit_btn,
+ .hide_aside, .editTask_btn,
+ input[type="checkbox"], .delete_project-btn {
     cursor: pointer;
 }
 
@@ -465,7 +504,6 @@ button, .edit_btn, .hide_aside {
     body {
         display: flex;
         flex-direction: column;
-        /* height: 100dvh; */
     }
     body.no_aside {
         padding: 10px 0 20px 0;
@@ -477,7 +515,6 @@ button, .edit_btn, .hide_aside {
         width: 100%;
         height: 100dvh;
         position: relative;
-        /* padding-bottom: 20px; */
         overflow: scroll;
         display: none;
     }
@@ -502,8 +539,6 @@ button, .edit_btn, .hide_aside {
     #no_task_message>#message_wrapper>p,
     #no_task_message>#message_wrapper>span {
     font-size: 1rem;
-    /* max-width: 20ch; */
     text-align: center;
-    /* white-space: unset; */
     }
 }
