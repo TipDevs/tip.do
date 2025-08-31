@@ -74,17 +74,21 @@ const addNewProjectEvent = (() => {
                 // const Add_new_projectBTN = document.querySelector('#Add_new_project');
                 if (new_project_title.value.trim() === '') {
                     new_project_title.value = "Can not be empty...";
+                    new_project_title.style.color = "red";
                     setTimeout(() => {
                         new_project_title.value = "";
+                        new_project_title.style.color = "black";
                     }, 1000);
                     return
                 };
                 if (new_project_title.value.trim().length > 30) {
                     new_project_title.value = "Too long...";
+                    new_project_title.style.color = "red";
                     setTimeout(() => {
                         new_project_title.value = "30 characters max!";
                         setTimeout(() => {
                             new_project_title.value = "";
+                            new_project_title.style.color = "black";
                         }, 1500);
                     }, 1000);
                     return;
@@ -177,10 +181,12 @@ const addTaskToProjectTray = (taskForm) => {
             const dueDate = taskForm.querySelector("form #dueDate");
             if (task_title.value.trim().length > 20) {
                 task_title.value = "Too long...";
+                task_title.style.color = "red";
                 setTimeout(() => {
                     task_title.value = "20 characters max!";
                     setTimeout(() => {
                         task_title.value = "";
+                        task_title.style.color = "black";
                     }, 1500);
                 }, 1000);
                 return;
@@ -203,13 +209,14 @@ const addTaskToProjectTray = (taskForm) => {
             const dueDate = taskForm.querySelector("form #dueDate");
             const projectId = target.dataset.projectId;
             const taskId = target.dataset.taskId;
-            let oldTitle = task_title.value.trim();
             if (task_title.value.trim().length > 20) {
                 task_title.value = "Too long...";
+                task_title.style.color = "red";
                 setTimeout(() => {
                     task_title.value = "20 characters max!";
                     setTimeout(() => {
-                        task_title.value = oldTitle;
+                        task_title.value = "";
+                        task_title.style.color = "black";
                     }, 1500);
                 }, 1000);
                 return;
@@ -271,10 +278,12 @@ toggleAside.hideAside.addEventListener("click", () => {
         const usernameFormInput = usernameForm.querySelector("input");
         if (usernameFormInput.value.length > 8) {
             usernameFormInput.value = "Too long...";
+            usernameFormInput.style.color = "red";
             setTimeout(() => {
                 usernameFormInput.value = "8 characters max!";
                 setTimeout(() => {
                     usernameFormInput.value = "";
+                    usernameFormInput.style.color = "black";
                 }, 1500);
             }, 1000);
             return;
