@@ -18,7 +18,7 @@ const CLICK_EVENTS = {
 };
 
 // pubsub subscribers for click event.
-(function clickSubscribers() {
+// (function clickSubscribers() {
     PubSub.subscribe(CLICK_EVENTS.update_project, () => {
         UiHandlerLogic().showProject();
         displayTaskInProject();
@@ -29,12 +29,14 @@ const CLICK_EVENTS = {
         PubSub.publish(CLICK_EVENTS.taskBtnEvent);
     });
     PubSub.subscribe(CLICK_EVENTS.taskBtnEvent, () => {
+        // PubSub.unsubscribe(UI_EVENTS.editTaskForm);
+        // PubSub.unsubscribe(UI_EVENTS.addTaskForm);
         addNewTaskForm();
     })
     PubSub.subscribe(CLICK_EVENTS.taskFormEvent, (msg, taskForm) => {
         addTaskToProjectTray(taskForm);
     })
-})();
+// })();
 
 
 // Use event delegation to ensure no errors when deleting.
@@ -66,7 +68,7 @@ const addNewProjectEvent = (() => {
         addNewProjectButton.after(form);
         form.addEventListener("click", (event) => {
             const target = event.target;
-            if (target.matches("#Add_new_project")) {
+            if (target.closest("#Add_new_project")) {
                 event.preventDefault();
                 const new_project_title = document.querySelector('#new_project_title');
                 // const Add_new_projectBTN = document.querySelector('#Add_new_project');
@@ -89,7 +91,7 @@ const addNewProjectEvent = (() => {
                     toggleAside.hideAsideEvent(mobileMediaQuery);
                 };    
             }
-            if (target.matches(".cancelForm")) {
+            if (target.closest(".cancelForm")) {
                 form.remove();
             }
         });
@@ -126,12 +128,12 @@ const addNewTaskForm = () => {
     const main = document.querySelector("main");
     main.addEventListener("click",  (e) => {
         const target = e.target;
-        if (target.matches(".editTask_btn")) {
+        if (target.closest(".editTask_btn")) {
             const projectId = target.dataset.projectId;
             const taskId = target.dataset.taskId;
             PubSub.publish(UI_EVENTS.editTaskForm, { projectId: projectId, taskId: taskId });
         }
-        if (target.matches(".add_task")) {
+        if (target.closest(".add_task")) {
             PubSub.publish(UI_EVENTS.addTaskForm);
         }
     });
@@ -145,11 +147,11 @@ const addTaskToProjectTray = (taskForm) => {
 
     taskForm.addEventListener("click", (event) => {
         const target = event.target;
-        if (target.matches(".cancelForm")) {
+        if (target.closest(".cancelForm")) {
             taskForm.remove();
-            PubSub.publish(CLICK_EVENTS.taskBtnEvent);
+            // PubSub.publish(CLICK_EVENTS.taskBtnEvent);
         }
-        if (target.matches(".submit.addNew")) {
+        if (target.closest(".submit.addNew")) {
             event.preventDefault(); // stop the page from reloading
             // Always target fields *inside the form*
             const task_title = taskForm.querySelector("form #task_title");
@@ -166,7 +168,7 @@ const addTaskToProjectTray = (taskForm) => {
             taskLogic().addTask(newTask, taskContainerId);
             taskForm.remove();
         }
-        if (target.matches(".submit.edit")) {
+        if (target.closest(".submit.edit")) {
             event.preventDefault(); // stop the page from reloading
             // Always target fields *inside the form*
             const task_title = taskForm.querySelector("form #task_title");
@@ -243,13 +245,13 @@ toggleAside.hideAside.addEventListener("click", () => {
         const target = event.target;
         const task = target.closest(".tasks_items");
         if (!task) return;
-        if (target.matches(".checkBox")) {
+        if (target.closest(".checkBox")) {
             const projectId = taskContainer.dataset.id || target.closest(".checkbox").dataset.id;
             const taskId = task.dataset.id;
             taskLogic().toggleCompletion(taskId, projectId);
             task.classList.toggle("completed");
         }
-        if (target.matches(".deleteTask")) {
+        if (target.closest(".deleteTask")) {
             const projectId = taskContainer.dataset.id || target.closest(".checkbox").dataset.id;
             const taskId = task.dataset.id;
             taskLogic().deleteTask(taskId, projectId);
