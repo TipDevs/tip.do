@@ -7,7 +7,7 @@
     <link rel="icon" href="./assets/images/tip.do.webp" sizes="32x32"  type="image/x-icon">
     <title>tip.do</title>
 </head>
-<body class="with_aside">
+<body class="with_aside" style="visibility: hidden;">
     <aside>
         <div class="hamburger_nav">
             <p id="username_container">Welcome <span id="username"></span>  <i class="fa-regular fa-pen-to-square fa-sm edit_btn"></i></p>
@@ -39,5 +39,10 @@
         <section class="tasks"></section>
         <section id="showTaskWrapper"></section>
     </main>
+    <script>
+        window.addEventListener("load", () => {
+            document.body.style.visibility = "visible";
+        })
+    </script>
 </body>
 </html>
