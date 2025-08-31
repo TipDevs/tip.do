@@ -87,7 +87,7 @@ const UI = () => {
         }
         const showTaskWrapper = document.getElementById("showTaskWrapper");
         showTaskWrapper.style.display = "block";
-        showTaskWrapper.innerHTML += `<i class="fa-solid fa-square-plus fa-2xl add_task" id="${project.id}"></i>`;
+        showTaskWrapper.innerHTML = `<i class="fa-solid fa-square-plus fa-2xl add_task" id="${project.id}"></i>`;
     };
     const prioritySortingDisplay = (priorityTask, priority) => {
         const taskContainer = document.querySelector('.tasks');
@@ -289,6 +289,7 @@ PubSub.subscribe(UI_EVENTS.updateUsername, () => {
 })
 
 PubSub.subscribe(UI_EVENTS.addTaskForm, () => {
+    PubSub.unsubscribe(CLICK_EVENTS.taskBtnEvent);
     UI().taskForm();
     const taskForm = document.querySelector('#new_task_form');
     const addTaskBtn = taskForm.querySelector('.submit');
@@ -298,6 +299,7 @@ PubSub.subscribe(UI_EVENTS.addTaskForm, () => {
 });
 
 PubSub.subscribe(UI_EVENTS.editTaskForm, (msg, { projectId, taskId }) => {
+    PubSub.unsubscribe(CLICK_EVENTS.taskBtnEvent);
     const projects = JSON.parse(localStorage.getItem("Project")) || [];
 
     UI().taskForm();
