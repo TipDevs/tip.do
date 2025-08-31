@@ -72,7 +72,13 @@ const addNewProjectEvent = (() => {
                 event.preventDefault();
                 const new_project_title = document.querySelector('#new_project_title');
                 // const Add_new_projectBTN = document.querySelector('#Add_new_project');
-                if (new_project_title.value.trim() === '') return;
+                if (new_project_title.value.trim() === '') {
+                    new_project_title.value = "Can not be empty...";
+                    setTimeout(() => {
+                        new_project_title.value = "";
+                    }, 1000);
+                    return
+                };
                 if (new_project_title.value.trim().length > 30) {
                     new_project_title.value = "Too long...";
                     setTimeout(() => {
