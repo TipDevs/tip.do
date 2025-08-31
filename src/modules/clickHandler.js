@@ -149,9 +149,10 @@ const addNewTaskForm = () => {
     const main = document.querySelector("main");
     main.addEventListener("click",  (e) => {
         const target = e.target;
-        if (target.closest(".editTask_btn")) {
-            const projectId = target.dataset.projectId;
-            const taskId = target.dataset.taskId;
+        const editBtn = target.closest(".editTask_btn");
+        if (editBtn) {
+            const projectId = editBtn.dataset.projectId;
+            const taskId = editBtn.dataset.taskId;
             PubSub.publish(UI_EVENTS.editTaskForm, { projectId: projectId, taskId: taskId });
         }
         if (target.closest(".add_task")) {
