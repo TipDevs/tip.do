@@ -73,6 +73,16 @@ const addNewProjectEvent = (() => {
                 const new_project_title = document.querySelector('#new_project_title');
                 // const Add_new_projectBTN = document.querySelector('#Add_new_project');
                 if (new_project_title.value.trim() === '') return;
+                if (new_project_title.value.trim().length > 30) {
+                    new_project_title.value = "Too long...";
+                    setTimeout(() => {
+                        new_project_title.value = "30 characters max!";
+                        setTimeout(() => {
+                            new_project_title.value = "";
+                        }, 1500);
+                    }, 1000);
+                    return;
+                }
                 const newProject = new Project(new_project_title.value.trim());
                 projectLogic().addNewProject(newProject);
                 setTimeout(() => {
@@ -159,7 +169,16 @@ const addTaskToProjectTray = (taskForm) => {
             const task_description = taskForm.querySelector("form #task_description");
             const priorityOptions = taskForm.querySelector("form #priorities");
             const dueDate = taskForm.querySelector("form #dueDate");
-
+            if (task_title.value.trim().length > 20) {
+                task_title.value = "Too long...";
+                setTimeout(() => {
+                    task_title.value = "20 characters max!";
+                    setTimeout(() => {
+                        task_title.value = "";
+                    }, 1500);
+                }, 1000);
+                return;
+            }
             const newTask = new Task(
             task_title?.value.trim(),
             task_description?.value.trim(),
@@ -178,6 +197,17 @@ const addTaskToProjectTray = (taskForm) => {
             const dueDate = taskForm.querySelector("form #dueDate");
             const projectId = target.dataset.projectId;
             const taskId = target.dataset.taskId;
+            let oldTitle = task_title.value.trim();
+            if (task_title.value.trim().length > 20) {
+                task_title.value = "Too long...";
+                setTimeout(() => {
+                    task_title.value = "20 characters max!";
+                    setTimeout(() => {
+                        task_title.value = oldTitle;
+                    }, 1500);
+                }, 1000);
+                return;
+            }
             taskLogic().editTask(task_title.value.trim(), task_description.value.trim(), priorityOptions.value.trim(), dueDate.value.trim(), taskId, projectId);
             taskForm.remove();
         }
@@ -233,6 +263,16 @@ toggleAside.hideAside.addEventListener("click", () => {
     usernameForm.addEventListener("submit", (e) => {
         e.preventDefault();
         const usernameFormInput = usernameForm.querySelector("input");
+        if (usernameFormInput.value.length > 8) {
+            usernameFormInput.value = "Too long...";
+            setTimeout(() => {
+                usernameFormInput.value = "8 characters max!";
+                setTimeout(() => {
+                    usernameFormInput.value = "";
+                }, 1500);
+            }, 1000);
+            return;
+        };
         newUser.userName = `${usernameFormInput.value}`;
         usernameMessageContainer.style.display = "block";
         usernameForm.reset();
