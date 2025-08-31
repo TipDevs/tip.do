@@ -121,6 +121,7 @@ const displayTaskInProject = () => {
                 }
             }
         });
+        PubSub.publish(CLICK_EVENTS.update_project);
     });
 };
 
@@ -180,6 +181,7 @@ const addTaskToProjectTray = (taskForm) => {
             taskLogic().editTask(task_title.value.trim(), task_description.value.trim(), priorityOptions.value.trim(), dueDate.value.trim(), taskId, projectId);
             taskForm.remove();
         }
+        PubSub.publish(CLICK_EVENTS.update_project);
   });
 };
 toggleAside.showAside.addEventListener("click", () => {
@@ -257,6 +259,7 @@ toggleAside.hideAside.addEventListener("click", () => {
             taskLogic().deleteTask(taskId, projectId);
             task.remove();
         }
+        PubSub.publish(CLICK_EVENTS.update_project);
     });
 })();
 export { displayTaskInProject, CLICK_EVENTS };
